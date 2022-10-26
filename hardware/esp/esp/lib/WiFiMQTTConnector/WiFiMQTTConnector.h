@@ -2,12 +2,12 @@
 #define WIFIMQTTCONNECTOR_H
 
 #include <MQTTClient.h>
-#include <WiFi.h>
+#include <ESP8266WiFi.h>
 #include <SensorValue.h>
 
 class WiFiMQTTConnector{
 private:
-    char* ssid = "ASUS_28";
+    const char* ssid = "ASUS_28";
     const char* password = "228asus228";
 
     const char* mqtt_server = "192.168.50.93";
