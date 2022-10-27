@@ -1,10 +1,10 @@
 #include <Arduino.h>
 #include <Robot.h>
-
-const int trigPin = 13;
-const int echoPin = 12;
-
-const int servoPin = 11;
+#include <DHTSensor.h>
+#include <TiltSensor.h>
+#include <USSensor.h>
+#include <PhotoResistor.h>
+#include <Component.h>
 
 const int FLMotorEnablePin = 33;
 const int FLMotorInput1Pin = 31;
@@ -20,37 +20,25 @@ const int BRMotorEnablePin = 26;
 const int BRMotorInput1Pin = 24;
 const int BRMotorInpu2Pin = 22;
 
+const int trigPin = 13;
+const int echoPin = 12;
+
+const int servoPin = 11;
+
 const int dhtPin = 2;
 //const int vibrationSensorPin = A9; //misfunctioning
 const int tiltSensorPin = 3;
 const int photoResistorPin = A8;
 const int sensorLampPin = 4;
 
-float duration, distance;
-
-/*
-MotorL293D FLMotor(FLMotorEnablePin, FLMotorInput1Pin, FLMotorInpu2Pin);
-MotorL293D BLMotor(BLMotorEnablePin, BLMotorInput1Pin, BLMotorInpu2Pin);
-MotorL293D FRMotor(FRMotorEnablePin, FRMotorInput1Pin, FRMotorInpu2Pin);
-MotorL293D BRMotor(BRMotorEnablePin, BRMotorInput1Pin, BRMotorInpu2Pin);*/
-
 Robot robot;
+USSensor usSensor(trigPin, echoPin);
+DHTSensor dhtSensor(dhtPin);
+TiltSensor tiltSensor(tiltSensorPin);
+PhotoResistor photoResistor(photoResistorPin);
 
-void photoResistorSensor(){
-  //0 -light, 700-800 semi dark, 1023 - dark
-  int value = analogRead(photoResistorPin);
-  Serial.println(value);
-  delay(250);
-}
-
-void tiltSensor(){
-  //0 = flat (is contact), 1 = tilted(no contact)
-  int value = digitalRead(tiltSensorPin);
-  Serial.println(value);
-  delay(500);
-}
-
-const float minDistance = 30.0f;
+const int componentsCount = 5;
+Component* components[componentsCount] = { &robot, &usSensor, &dhtSensor, &tiltSensor, &photoResistor };
 
 void setup() {
   Serial.begin(9600);
@@ -60,18 +48,18 @@ void setup() {
   robot.setBackLeftMotor(BLMotorEnablePin, BLMotorInput1Pin, BLMotorInpu2Pin);
   robot.setForwardRightMotor(FRMotorEnablePin, FRMotorInput1Pin, FRMotorInpu2Pin);
   robot.setBackRightMotor(BRMotorEnablePin, BRMotorInput1Pin, BRMotorInpu2Pin);
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  pinMode(photoResistorPin, INPUT);
-  pinMode(tiltSensorPin, INPUT);
+
+  setComponentsIds(components, componentsCount);
 }
 
 void loop() {
   if(Serial3.available() > 0) {
-    // read the incoming byte:
     char incomingByte = (char)Serial3.read();
 
-    // say what you got:
-    Serial.println(incomingByte);
   }
+}
+
+void setComponentsIds(Component* components[], int componentsSize){
+  for(int i=0; i<componentsSize; i++)
+    components[i]->setId(i); 
 }

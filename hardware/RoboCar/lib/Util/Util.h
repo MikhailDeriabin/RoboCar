@@ -3,6 +3,7 @@
 
 #include <CommandValue.h>
 #include <Component.h>
+#include <SensorValue.h>
 
 class Util{
 public:
@@ -17,6 +18,11 @@ public:
     int getIntValueFromValueString(CommandValue key, char str[], int strSize);
 
     Component* getDeviceIdFromTopic(char* clientId, char* topic, Component* components[], int size);
+
+    void generateValueStr(int deviceId, char strTo[], int* strSize);
+    void generateValueStringPair(SensorValue sensorValue, int value, char strTo[], int* strSize);
+    void generateValueString(char stringTo[], int* stringSize, int deviceId, SensorValue sensorValues[], int sensorValuesSize, int values[], int valuesSize);
+    void sendStringSerial(char string[], int stringSize);
 };
 
 #endif
