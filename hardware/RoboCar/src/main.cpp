@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <MotorL293D.h>
+#include <Robot.h>
 
 const int trigPin = 13;
 const int echoPin = 12;
@@ -28,10 +28,13 @@ const int sensorLampPin = 4;
 
 float duration, distance;
 
+/*
 MotorL293D FLMotor(FLMotorEnablePin, FLMotorInput1Pin, FLMotorInpu2Pin);
 MotorL293D BLMotor(BLMotorEnablePin, BLMotorInput1Pin, BLMotorInpu2Pin);
 MotorL293D FRMotor(FRMotorEnablePin, FRMotorInput1Pin, FRMotorInpu2Pin);
-MotorL293D BRMotor(BRMotorEnablePin, BRMotorInput1Pin, BRMotorInpu2Pin);
+MotorL293D BRMotor(BRMotorEnablePin, BRMotorInput1Pin, BRMotorInpu2Pin);*/
+
+Robot robot;
 
 void photoResistorSensor(){
   //0 -light, 700-800 semi dark, 1023 - dark
@@ -46,46 +49,29 @@ void tiltSensor(){
   Serial.println(value);
   delay(500);
 }
-/*
-void vibrationSensor(){
-  //290-360 idle; 0-150 vibration
-  int value = analogRead(vibrationSensorPin);
-  Serial.println(value);
-  delay(100);
-}*/
-
-
-void moveForward();
-void stopMoving();
 
 const float minDistance = 30.0f;
 
 void setup() {
+  Serial.begin(9600);
+  Serial3.begin(115200);
+
+  robot.setForwardLeftMotor(FLMotorEnablePin, FLMotorInput1Pin, FLMotorInpu2Pin);
+  robot.setBackLeftMotor(BLMotorEnablePin, BLMotorInput1Pin, BLMotorInpu2Pin);
+  robot.setForwardRightMotor(FRMotorEnablePin, FRMotorInput1Pin, FRMotorInpu2Pin);
+  robot.setBackRightMotor(BRMotorEnablePin, BRMotorInput1Pin, BRMotorInpu2Pin);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(photoResistorPin, INPUT);
   pinMode(tiltSensorPin, INPUT);
-  Serial.begin(9600);
 }
 
 void loop() {
-  digitalWrite(sensorLampPin, HIGH);
-  photoResistorSensor();
-  tiltSensor();
-  digitalWrite(sensorLampPin, LOW);
-  delay(500);
-}
+  if(Serial3.available() > 0) {
+    // read the incoming byte:
+    char incomingByte = (char)Serial3.read();
 
-void moveForward(){
-  FLMotor.spinCounter();
-  BLMotor.spinCounter();
-  FRMotor.spinClock();
-  BRMotor.spinClock();
-}
-
-void stopMoving(){
-  FLMotor.stopSpin();
-  BLMotor.stopSpin();
-  FRMotor.stopSpin();
-  BRMotor.stopSpin();
+    // say what you got:
+    Serial.println(incomingByte);
+  }
 }

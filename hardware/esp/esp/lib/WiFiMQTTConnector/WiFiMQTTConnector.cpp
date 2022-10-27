@@ -1,7 +1,7 @@
 #include "WiFiMQTTConnector.h"
 #include <MQTTClient.h>
 #include <Arduino.h>
-#include <WiFi.h>
+#include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <SensorValue.h>
 #include <Converter.h>
@@ -27,15 +27,8 @@ WiFiMQTTConnector::WiFiMQTTConnector(char* clientId, const int componentCount){
 void WiFiMQTTConnector::connectToBroker(){
     setup_wifi();
     while (!pubSubClient->connected()) {
-        Serial.println("The client connects to mosquitto mqtt broker");
-
-        if (pubSubClient->connect(clientId)) {
-            Serial.println("Public emqx mqtt broker connected");
-        } else {
-            Serial.print("failed with state ");
-            Serial.print(pubSubClient->state());
-            delay(2000);
-        }   
+        if (!pubSubClient->connect(clientId))
+            delay(2000);          
     }
     for(int i=0; i<componentCount; i++)
         pubSubClient->subscribe(topics[i]);    
@@ -43,18 +36,10 @@ void WiFiMQTTConnector::connectToBroker(){
 
 void WiFiMQTTConnector::setup_wifi() {
   WiFi.begin(ssid, password);
-  Serial.println();
-  Serial.print("Connecting ...");
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(".");
   }
-
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
 }
 
 int WiFiMQTTConnector::getDeviceIdFromTopic(char* topic){

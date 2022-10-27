@@ -1,5 +1,5 @@
 #include "MQTTClient.h"
-#include <WiFi.h>
+#include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
 MQTTClient* MQTTClient::instance = nullptr;
