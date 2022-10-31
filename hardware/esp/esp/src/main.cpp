@@ -27,6 +27,9 @@ const int componentCount = 6;
 WiFiMQTTConnector* wifiMQTTConnector = new WiFiMQTTConnector(clientId, componentCount);
 PubSubClient* client = wifiMQTTConnector->getPubSubClient();
 
+void clearCharArray(char arr[], int arrSize);
+void sendData(char str[], int strSize);
+
 void setup() {
   Serial.begin(115200); 
   
@@ -58,6 +61,64 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
+const int bufferSize = 50;
+char serialBuffer[bufferSize];
+int serialBufferIndex = 0;
+
 void loop() {
   client->loop();
+  
+  if(Serial.available() > 0) {
+    char incomingChar = (char)Serial.read();
+
+    serialBuffer[serialBufferIndex] = incomingChar;
+    serialBufferIndex++;
+
+    if(incomingChar == ';'){
+      sendData(serialBuffer, serialBufferIndex);
+      clearCharArray(serialBuffer, serialBufferIndex);
+      serialBufferIndex = 0;
+    }
+  }
+}
+
+void clearCharArray(char arr[], int arrSize){
+  for(int i=0; i<arrSize; i++){
+    arr[i] = 0;
+  }
+}
+
+void sendData(char str[], int strSize){
+  Converter converter;
+  Util util;
+
+  int valueStartIndex = 0;
+  for(int i = 0; i<strSize; i++){   
+    if(str[i] == '_'){
+      valueStartIndex = i+1;
+      break;
+    }
+  }
+  int idSize = valueStartIndex - 1;
+  
+  //TODO: calculate clientId size
+  int topicSize = 1 + idSize + 1;
+  char topic[topicSize];
+  int topicIndex = 0;
+  for(int j=0; j<1; j++){
+    topic[topicIndex] = clientId[j];
+    topicIndex++;
+  }
+  topic[topicIndex] = '/';
+  topicIndex++;
+  for(int j=0; j<idSize; j++){
+    topic[topicIndex] = str[j];
+    topicIndex++;
+  }
+
+  int valueStringSize = strSize - valueStartIndex;
+  char valueString[valueStringSize];
+  util.splitCharArr(str, valueString, valueStartIndex, strSize);
+
+  client->publish(topic, valueString);
 }

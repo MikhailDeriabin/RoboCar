@@ -9,7 +9,6 @@ protected:
     int id;
     Status status;
     char* name;
-    void setPinMode(int pinNumbers[], int pinCount, int modeToSet);
 public:
     Component();
    

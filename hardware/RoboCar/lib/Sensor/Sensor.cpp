@@ -1,8 +1,6 @@
 #include "Component.h"
 #include "Sensor.h"
-#include "WiFiMQTTConnector.h"
 
-Sensor::Sensor(WiFiMQTTConnector* wifiMQTTConnector) {
+Sensor::Sensor() {
     Component::name = "Sensor";
-    this->wifiMQTTConnector = wifiMQTTConnector;
 }

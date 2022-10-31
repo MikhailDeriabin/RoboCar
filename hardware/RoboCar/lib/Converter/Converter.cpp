@@ -88,9 +88,7 @@ char* Converter::floatToCharArr(float num, char arrTo[], int* arrSize){
     int numSize = pointIndex+floatPartSize;
     if(floatPartSize > 0)
         numSize++;
-    *arrSize = numSize;
-    
-        
+    *arrSize = numSize;       
 
     int tempNumInt = (int)tempNum;
     for(int i=numSize-1; i>=0; i--){

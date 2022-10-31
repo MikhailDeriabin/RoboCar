@@ -17,9 +17,3 @@ void Component::setName(char name[]){ this->name = name; }
 char* Component::toString(){
     return this->name;
 }
-
-void Component::setPinMode(int pinNumbers[], int pinCount, int modeToSet){  
-    for(int i=0; i<pinCount; i++){
-        pinMode(pinNumbers[i], OUTPUT);
-    }
-}

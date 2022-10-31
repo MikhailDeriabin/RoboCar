@@ -6,10 +6,11 @@
 #include <CommandValue.h>
 
 MotorL293D::MotorL293D(int enablePin, int input1Pin, int input2Pin) : enablePin(enablePin), input1Pin(input1Pin), input2Pin(input2Pin){
-    int pins[] = {enablePin, input1Pin, input2Pin};
-    Component::setPinMode(pins, 3, OUTPUT);
     Component::name = "MotorL293D";
+
+    int pins[] = {enablePin, input1Pin, input2Pin};   
     for(int pin : pins){
+        pinMode(pin, OUTPUT);
         digitalWrite(pin, LOW);
     }
     this->direction = CLOCKWISE;  

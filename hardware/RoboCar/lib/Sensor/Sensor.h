@@ -2,13 +2,10 @@
 #define SENSOR_H
 
 #include "Component.h"
-#include <WiFiMQTTConnector.h>
 
 class Sensor : public Component{
-protected:
-    WiFiMQTTConnector* wifiMQTTConnector;
 public:
-    Sensor(WiFiMQTTConnector* wifiMQTTConnector);
+    Sensor();
     virtual void sendData() = 0;
 };
 
