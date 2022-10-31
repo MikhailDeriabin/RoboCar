@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+const IconPath = path.join(__dirname, 'img', 'logo.png');
 
 class AppUpdater {
   constructor() {
@@ -74,6 +75,8 @@ const createWindow = async () => {
     width: 1024,
     height: 728,
     icon: getAssetPath('icon.png'),
+    // icon: getAssetPath('https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_200X200.png'),
+    // icon: IconPath,
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')

@@ -1,6 +1,7 @@
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import {MemoryRouter as Router, Routes, Route, useNavigate} from 'react-router-dom';
 import icon from '../../assets/icon.svg';
 import './App.css';
+import ControlCar from "../pages/ControlCar";
 
 const Hello = () => {
   return (
@@ -31,7 +32,7 @@ const Hello = () => {
             <span role="img" aria-label="folded hands">
               🙏
             </span>
-            Donate
+            Donat
           </button>
         </a>
       </div>
@@ -39,12 +40,26 @@ const Hello = () => {
   );
 };
 
+const Navigation = () => {
+  let navigate = useNavigate();
+  return (
+    <div>
+    <button onClick={()=> navigate('controlCar')}>controlCar</button>
+    <button onClick={()=> navigate('/')}>go home</button>
+    </div>
+  );
+}
+
 export default function App() {
   return (
+    <div>
     <Router>
+      <Navigation/>
       <Routes>
         <Route path="/" element={<Hello />} />
+        <Route path="/controlCar" element={<ControlCar />} />
       </Routes>
     </Router>
+    </div>
   );
 }
