@@ -212,11 +212,12 @@ void Util::generateValueString(char stringTo[], int* stringSize, int deviceId, S
     char deviceIdRaw[10];
     int deviceIdSize;
     converter.intToCharArr(deviceId, deviceIdRaw, &deviceIdSize);
-    char deviceIdChar[deviceIdSize];
     for(int i=0; i<deviceIdSize; i++){
-        valueStringRaw[valueStringRawIndex] = deviceIdChar[i];
+        valueStringRaw[valueStringRawIndex] = deviceIdRaw[i];
         valueStringRawIndex++;
     }
+    valueStringRaw[valueStringRawIndex] = '_';
+    valueStringRawIndex++;
 
     for(int i=0; i<sensorValuesSize; i++){
         char pairRaw[10];

@@ -10,14 +10,12 @@
 
 PhotoResistor::PhotoResistor(int pinNumber) : pinNumber(pinNumber), Sensor(){
    Component::name = "PhotoResitor";
-   int pins[] = { pinNumber };
-   Component::setPinMode(pins, 1, INPUT);
+   pinMode(pinNumber, INPUT);
 }
 
 void PhotoResistor::giveCommand(Status status, char* value, int valueSize){
    switch (status){
       case MEASURE:
-         Serial.println("MEASURE");
          sendData();
          break;
 
@@ -36,7 +34,7 @@ void PhotoResistor::sendData(){
    if(currentLightIntens != currentLightIntens)
       currentLightIntens = 0;
 
-    int values[1] = { currentLightIntens }; 
+    int values[1] = { currentLightIntens };
 
     //0_23:345;
     char valueStringRaw[50];
@@ -44,6 +42,7 @@ void PhotoResistor::sendData(){
     util.generateValueString(valueStringRaw, &valueStringSize, id, sensorValues, 1, values, 1);
     char valueString[valueStringSize];
     util.splitCharArr(valueStringRaw, valueString, 0, valueStringSize);
+    
     util.sendStringSerial(valueString, valueStringSize);
 }
 

@@ -6,7 +6,11 @@ enum SensorValue {
     HUMIDITY,
     LIGHT_INTENSITY,
     IS_TILTED,
-    DISTANCE
+
+    DISTANCE,
+    DISTANCE_FRONT,
+    DISTANCE_LEFT,
+    DISTANCE_RIGHT
 };
 
 #endif

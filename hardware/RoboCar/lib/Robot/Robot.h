@@ -14,7 +14,10 @@ public:
 
     void giveCommand(Status status, char* value, int valueSize) override;
 
-    void moveForward();
+    void moveForward(int duration=-1);
+    void moveBack(int duration=-1);
+    void turnLeft(int duration=-1);
+    void turnRight(int duration=-1);
     void stopMoving();
     int lol = 0;
 

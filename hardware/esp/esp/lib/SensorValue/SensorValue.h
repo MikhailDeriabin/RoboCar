@@ -4,7 +4,13 @@
 enum SensorValue {
     TEMPERATURE,
     HUMIDITY,
-    LIGHT_INTENSITY
+    LIGHT_INTENSITY,
+    IS_TILTED,
+
+    DISTANCE,
+    DISTANCE_FRONT,
+    DISTANCE_LEFT,
+    DISTANCE_RIGHT
 };
 
 #endif

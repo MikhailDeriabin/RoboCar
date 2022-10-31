@@ -10,8 +10,7 @@
 
 TiltSensor::TiltSensor(int pinNumber) : pinNumber(pinNumber), Sensor(){
    Component::name = "PhotoResitor";
-   int pins[] = { pinNumber };
-   Component::setPinMode(pins, 1, INPUT);
+   pinMode(pinNumber, INPUT);
 }
 
 void TiltSensor::giveCommand(Status status, char* value, int valueSize){

@@ -10,16 +10,13 @@
 
 USSensor::USSensor(int trigPinNumber, int echoPinNumber) : trigPinNumber(trigPinNumber), echoPinNumber(echoPinNumber), Sensor(){
    Component::name = "USSensor";
-   int trigPins[] = { trigPinNumber };
-   Component::setPinMode(trigPins, 1, OUTPUT);
-   int echoPins[] = { echoPinNumber };
-   Component::setPinMode(echoPins, 1, INPUT);
+   pinMode(trigPinNumber, OUTPUT);
+   pinMode(echoPinNumber, INPUT);
 }
 
 void USSensor::giveCommand(Status status, char* value, int valueSize){
    switch (status){
       case MEASURE:
-         Serial.println("MEASURE");
          sendData();
          break;
 
@@ -49,14 +46,14 @@ void USSensor::sendData(){
     util.sendStringSerial(valueString, valueStringSize);
 }
 
-int USSensor::getValue(){ 
-    /// Clears the trigPin
+int USSensor::getValue(){
   digitalWrite(trigPinNumber, LOW);
   delayMicroseconds(2);
-
   digitalWrite(trigPinNumber, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPinNumber, LOW);
-  long duration = pulseIn(echoPinNumber, HIGH);
-  return duration * 0.034 / 2;
+
+  float duration = pulseIn(echoPinNumber, HIGH);
+
+  return (duration*0.0343)/2;
 }

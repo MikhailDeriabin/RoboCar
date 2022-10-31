@@ -15,6 +15,14 @@ enum Status {
     CHANGE_SPIN_DIRECTION,
     STOP_SPIN,
 
+    TURN_ON_ANGLE,
+
+    MOVE_FORWARD,
+    MOVE_BACK,
+    TURN_LEFT,
+    TURN_RIGHT,
+    STOP_MOVING,
+
     MEASURE
 };
 

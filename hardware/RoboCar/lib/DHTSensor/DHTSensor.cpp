@@ -14,8 +14,7 @@ DHTSensor::DHTSensor(int pinNumber) : pinNumber(pinNumber), Sensor(){
    this->dht = new DHT(pinNumber, DHT11);
    dht->begin();
    Component::name = "DHTSensor";
-   int pins[] = { pinNumber };
-   Component::setPinMode(pins, 1, INPUT);
+   pinMode(pinNumber, INPUT);
 }
 
 DHTSensor::DHTSensor(int pinNumber, uint8_t updatingInteval) : pinNumber(pinNumber), Sensor(){
