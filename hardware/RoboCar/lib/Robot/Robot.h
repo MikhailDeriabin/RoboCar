@@ -2,6 +2,8 @@
 #define ROBOT_H
 
 #include <MotorL293D.h>
+#include <ServoMotor.h>
+#include <USSensor.h>
 
 class Robot : public Component{
 public:
@@ -12,6 +14,9 @@ public:
     void setBackLeftMotor(const int enablePin, const int input1Pin, const int input2Pin);
     void setBackRightMotor(const int enablePin, const int input1Pin, const int input2Pin);
 
+    void setServoMotor(ServoMotor* servoMotor);
+    void setUSSensor(USSensor* usSensor);
+
     void giveCommand(Status status, char* value, int valueSize) override;
 
     void moveForward(int duration=-1);
@@ -19,13 +24,17 @@ public:
     void turnLeft(int duration=-1);
     void turnRight(int duration=-1);
     void stopMoving();
-    int lol = 0;
+
+    void getCoordinates();
 
 private:
     MotorL293D* FLMotor;
     MotorL293D* BLMotor;
     MotorL293D* FRMotor;
     MotorL293D* BRMotor;
+
+    ServoMotor* servoMotor;
+    USSensor* usSensor;
 };
 
 #endif

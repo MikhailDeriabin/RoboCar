@@ -3,6 +3,7 @@
 
 #include "Sensor.h"
 #include "Status.h"
+#include "SensorValue.h"
 
 class USSensor : public Sensor{
 private:
@@ -11,7 +12,7 @@ private:
 public:
     USSensor(int trigPinNumber, int echoPinNumber);
     void giveCommand(Status status, char* value, int valueSize) override;
-    void sendData() override;
+    void sendData(SensorValue sensorValue=DISTANCE) override;
     int getValue();
 };
 

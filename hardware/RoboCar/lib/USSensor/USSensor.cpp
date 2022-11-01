@@ -25,11 +25,11 @@ void USSensor::giveCommand(Status status, char* value, int valueSize){
    }
 }
 
-void USSensor::sendData(){
+void USSensor::sendData(SensorValue sensorValue){
    Util util;
    Converter converter;
 
-   SensorValue sensorValues[3] = { DISTANCE };
+   SensorValue sensorValues[1] = { sensorValue };
 
    int distance = getValue();
    if(distance != distance)

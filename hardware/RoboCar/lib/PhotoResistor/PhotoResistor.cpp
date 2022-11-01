@@ -24,7 +24,7 @@ void PhotoResistor::giveCommand(Status status, char* value, int valueSize){
    }
 }
 
-void PhotoResistor::sendData(){
+void PhotoResistor::sendData(SensorValue sensorValue){
    Util util;
    Converter converter;
 

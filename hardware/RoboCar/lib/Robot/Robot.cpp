@@ -23,6 +23,9 @@ void Robot::setBackRightMotor(const int enablePin, const int input1Pin, const in
     BRMotor->turnOn();
 }
 
+void Robot::setServoMotor(ServoMotor* servoMotor){ this->servoMotor = servoMotor; }
+void Robot::setUSSensor(USSensor* usSensor){ this->usSensor = usSensor; }
+
 void Robot::giveCommand(Status status, char* value, int valueSize){
   int valueInt = -1;
   if(valueSize > 0){
@@ -49,6 +52,10 @@ void Robot::giveCommand(Status status, char* value, int valueSize){
 
       case STOP_MOVING:
         stopMoving();
+        break;
+
+      case GET_COORDINATES:
+        getCoordinates();
         break;
 
       default:
@@ -107,4 +114,26 @@ void Robot::stopMoving(){
   BLMotor->stopSpin();
   FRMotor->stopSpin();
   BRMotor->stopSpin();
+}
+
+void Robot::getCoordinates(){
+  int measureDelay = 150;
+  int turnDelay = 200;
+
+  servoMotor->turnOnAngle(0);
+  delay(turnDelay);
+  usSensor->sendData(DISTANCE_RIGHT);
+  delay(measureDelay);
+
+  servoMotor->turnOnAngle(90);
+  delay(turnDelay);
+  usSensor->sendData(DISTANCE_FRONT);
+  delay(measureDelay);
+
+  servoMotor->turnOnAngle(180);
+  delay(turnDelay);
+  usSensor->sendData(DISTANCE_LEFT);
+  delay(measureDelay);
+
+  servoMotor->turnOnAngle(90);
 }

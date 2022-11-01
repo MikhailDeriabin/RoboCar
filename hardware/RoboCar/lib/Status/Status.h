@@ -22,6 +22,7 @@ enum Status {
     TURN_LEFT,
     TURN_RIGHT,
     STOP_MOVING,
+    GET_COORDINATES,
 
     MEASURE
 };

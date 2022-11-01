@@ -2,6 +2,8 @@
 #define SENSOR_VALUE_H
 
 enum SensorValue {
+    NOT_SPECIFIED,
+
     TEMPERATURE,
     HUMIDITY,
     LIGHT_INTENSITY,

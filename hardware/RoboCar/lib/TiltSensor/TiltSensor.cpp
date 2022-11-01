@@ -25,7 +25,7 @@ void TiltSensor::giveCommand(Status status, char* value, int valueSize){
    }
 }
 
-void TiltSensor::sendData(){
+void TiltSensor::sendData(SensorValue sensorValue){
    Util util;
    Converter converter;
 

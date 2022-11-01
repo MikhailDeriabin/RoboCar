@@ -35,7 +35,7 @@ void DHTSensor::giveCommand(Status status, char* value, int valueSize){
    }
 }
 
-void DHTSensor::sendData(){
+void DHTSensor::sendData(SensorValue sensorValue){
    Util util;
    Converter converter;
 

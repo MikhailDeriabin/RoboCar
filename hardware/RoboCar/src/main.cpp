@@ -61,6 +61,8 @@ void setup() {
   robot.setBackLeftMotor(BLMotorEnablePin, BLMotorInput1Pin, BLMotorInpu2Pin);
   robot.setForwardRightMotor(FRMotorEnablePin, FRMotorInput1Pin, FRMotorInpu2Pin);
   robot.setBackRightMotor(BRMotorEnablePin, BRMotorInput1Pin, BRMotorInpu2Pin);
+  robot.setServoMotor(&servoMotor);
+  robot.setUSSensor(&usSensor);
 
   setComponentsIds(components, componentsCount);
 }
