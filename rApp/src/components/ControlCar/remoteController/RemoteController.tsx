@@ -17,13 +17,17 @@ import mqtt from "precompiled-mqtt";
 const mqttOptions : object = {
   servers: [
     {
-      host: '78.27.125.143',
-      port: 1884
+      // host: '78.27.125.143',
+      host: "ws://78.27.125.143",
+      // port: 1884
+      port: 8883
     }
   ]
 }
 
-const client  = mqtt.connect(mqttOptions)
+const client = mqtt.connect('ws://78.27.125.143:8883')
+
+// const client  = mqtt.connect(mqttOptions)
 
 client.on('connect', function () {
   client.subscribe('presence', function (err) {
