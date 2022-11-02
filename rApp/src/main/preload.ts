@@ -21,3 +21,9 @@ contextBridge.exposeInMainWorld('electron', {
     },
   },
 });
+
+const mqtt = require('mqtt')
+// @ts-ignore
+window.mqtt = mqtt
+
+export const newMqtt = mqtt
