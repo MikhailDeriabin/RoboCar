@@ -17,31 +17,43 @@ const RemoteController = () => {
 
   // console.log('rerender test')
 
+  //
   const [isActive, setIsActive] = useState(defaultIsActive);
+
+  //for css only
+  const [isParentActive, setIsParentActive] = useState<boolean>(false);
+
 
 
   const eventLogic = () => {
   return {
     'centerLeft': function (){
       setIsActive({...isActive , centerLeft: !isActive.centerLeft });
+      setIsParentActive(true);
     },
     'centerRight': function (){
       setIsActive({...isActive , centerRight: !isActive.centerRight });
+      setIsParentActive(true);
     },
     'top': function (){
       setIsActive({...isActive , top: !isActive.top });
+      setIsParentActive(true);
     },
     'right': function (){
       setIsActive({...isActive , right: !isActive.right });
+      setIsParentActive(true);
     },
     'bottom': function (){
       setIsActive({...isActive , bottom: !isActive.bottom });
+      setIsParentActive(true);
     },
     'left': function (){
       setIsActive({...isActive , left: !isActive.left });
+      setIsParentActive(true);
     },
     'setDefault': function (){
       setIsActive(defaultIsActive);
+      setIsParentActive(false);
     },
   }
   }
@@ -85,7 +97,7 @@ const RemoteController = () => {
   }, []);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={classnames(styles.wrapper, isParentActive && styles.elementActive)}>
       <div className={classnames(styles.circle)}>
         <div className={classnames(styles.cell, styles.centerButtons, styles.centerLeft,
           isActive.centerLeft && styles.cellIsActive)
