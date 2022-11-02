@@ -1,0 +1,78 @@
+.wrapper{
+  width: 300px;
+  height: 300px;
+
+}
+
+.circle {
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  background-color: #a7b7c5;
+  opacity: 0.9;
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  grid-template-rows: repeat(7,1fr);
+
+  &:hover{
+    opacity: 1;
+  }
+
+}
+.top{
+  grid-area: 1/4;
+}
+.right{
+  grid-area: 4/7;
+}
+.bottom{
+  grid-area: 7/4;
+}
+.left{
+  grid-area: 4/1;
+}
+.centerLeft{
+   grid-area: 4/3;
+ }
+.centerRight{
+  grid-area: 4/5;
+}
+
+.cell{
+  position: relative;
+  background-color: white;
+  transform: scale(1.5);
+  cursor: pointer;
+  &:hover{
+    transform: scale(1.65);
+  }
+}
+
+.cellIsActive{
+  background-color: red!important;
+  transform: scale(1.65);
+}
+
+
+.directionButtons{
+
+}
+
+.centerButtons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+
+.innerCell{
+  //position: absolute;
+}
+
+
+
+
+
+
+
+
