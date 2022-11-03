@@ -5,7 +5,6 @@
 #include <Component.h>
 #include <Util.h>
 #include "Sensor.h"
-#include <CommandValue.h>
 #include "SensorValue.h"
 
 TiltSensor::TiltSensor(int pinNumber) : pinNumber(pinNumber), Sensor(){

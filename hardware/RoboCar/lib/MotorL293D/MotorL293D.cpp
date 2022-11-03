@@ -3,7 +3,6 @@
 #include <Converter.h>
 #include <Util.h>
 #include "Status.h"
-#include <CommandValue.h>
 
 MotorL293D::MotorL293D(int enablePin, int input1Pin, int input2Pin) : enablePin(enablePin), input1Pin(input1Pin), input2Pin(input2Pin){
     Component::name = "MotorL293D";
