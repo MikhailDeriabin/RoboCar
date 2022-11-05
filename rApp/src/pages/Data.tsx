@@ -1,10 +1,9 @@
 import React from 'react';
+import DataMain from '../components/Data/DataMain';
 
 const Data = () => {
   return (
-    <div>
-      Data page
-    </div>
+    <DataMain/>
   );
 };
 

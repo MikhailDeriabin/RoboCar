@@ -5,6 +5,7 @@ import GoIcon from "../../UI/GoIcon";
 import { newMqtt } from '../../../main/preload';
 
 
+// @ts-ignore
 import mqtt from "precompiled-mqtt";
 
 // const mqtt = require('mqtt')
@@ -14,34 +15,34 @@ import mqtt from "precompiled-mqtt";
 //   port: 1884,
 // }
 
-const mqttOptions : object = {
-  servers: [
-    {
-      // host: '78.27.125.143',
-      host: "ws://78.27.125.143",
-      // port: 1884
-      port: 8883
-    }
-  ]
-}
-
-const client = mqtt.connect('ws://78.27.125.143:8883')
-
-// const client  = mqtt.connect(mqttOptions)
-
-client.on('connect', function () {
-  client.subscribe('presence', function (err) {
-    if (!err) {
-      client.publish('presence', 'Hello mqtt')
-    }
-  })
-})
-
-client.on('message', function (topic, message) {
-  // message is Buffer
-  console.log(message.toString())
-  client.end()
-})
+// const mqttOptions : object = {
+//   servers: [
+//     {
+//       // host: '78.27.125.143',
+//       host: "ws://78.27.125.143",
+//       // port: 1884
+//       port: 8883
+//     }
+//   ]
+// }
+//
+// const client = mqtt.connect('ws://78.27.125.143:8883')
+//
+// // const client  = mqtt.connect(mqttOptions)
+//
+// client.on('connect', function () {
+//   client.subscribe('presence', function (err:any) {
+//     if (!err) {
+//       client.publish('presence', 'Hello mqtt');
+//     }
+//   })
+// })
+//
+// client.on('message', function (topic: any, message: { toString: () => any; }) {
+//   // message is Buffer
+//   console.log(message.toString());
+//   client.end();
+// })
 
 
 
