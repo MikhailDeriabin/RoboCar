@@ -113,6 +113,7 @@
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
     "electron-updater": "^5.2.3",
+    "immutability-helper": "^3.1.1",
     "mqtt": "^4.3.7",
     "nanoid": "^4.0.0",
     "precompiled-mqtt": "^4.3.12",

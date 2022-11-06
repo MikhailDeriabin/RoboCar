@@ -1,11 +1,15 @@
 .canvasWrapper{
 
+  position: relative;
+
+
   .zeroScale{
     display: grid;
     grid-auto-flow: column;
 
     .zero{
       justify-self: self-start;
+      margin-top: 5px;
     }
     .scale{
       margin-top: 5px;
