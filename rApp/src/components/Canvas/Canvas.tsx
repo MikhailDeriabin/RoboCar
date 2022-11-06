@@ -27,7 +27,7 @@ const Canvas = ({
                     humidity: 's',
                     light_intensity : 's',
                     is_tilted: false,
-                    x: 100,
+                    x: 400,
                     y: 50,
                   },
                     {
@@ -98,9 +98,9 @@ const Canvas = ({
 
         //drow lines
         context.moveTo(0, 0);
-        context.lineTo(X(0), Y(20));
-        context.lineTo(X(20), Y(20));
-        context.lineTo(X(20), Y(180));
+        context.lineTo(X(0), Y(200));
+        context.lineTo(X(200), Y(200));
+        context.lineTo(X(200), Y(100));
         context.strokeStyle = '#ff0000';
         context.stroke();
 
@@ -187,7 +187,12 @@ const Canvas = ({
 
           <div className={styles.zeroScale}>
             <span className={styles.zero}>0</span>
-            <span className={styles.scale}>Scale: {scaleK}:1 (px:cm)</span>
+            {/*<span className={styles.scale}>Scale: {scaleK.toFixed(2)}:1 (px:cm)</span>*/}
+            {scaleK >= 1 && <span className={styles.scale}>S: {scaleK.toFixed(2)}:1 (px:cm)</span>}
+
+            {scaleK < 1 && <span className={styles.scale}>S: 1:{(10*scaleK).toFixed(2)} (px:cm)</span>}
+
+            {/*<span className={styles.scale}>S: {scaleK.toFixed(2)}:1 (px:cm)</span>*/}
           </div>
         </div>
 
