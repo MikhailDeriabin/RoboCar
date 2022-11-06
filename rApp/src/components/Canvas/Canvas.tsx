@@ -27,8 +27,8 @@ const Canvas = ({
                     humidity: 's',
                     light_intensity : 's',
                     is_tilted: false,
-                    x: 150,
-                    y: 150,
+                    x: 100,
+                    y: 50,
                   },
                     {
                       id: 4,
@@ -49,13 +49,24 @@ const Canvas = ({
   /**
    * scale ratio px:cm
    */
-  const scaleK = 2;
+
+
+  const calculateScale = (width:number,height:number,constantSideValue:number):number => {
+    const comparableValue = (width>height) ? width : height;
+    return 100 / ((comparableValue * 100)/ constantSideValue);
+  }
+  const constantSideValue = 400;
+
+  const scaleK = calculateScale(width,height,constantSideValue);
+
+  console.log(scaleK)
+
 
   const scaledWidth = (width * scaleK);
   const scaledHeight = (height * scaleK);
 
-  const scaledWidthPx = (width * scaleK) + 'px';
-  const scaledHeightPx = (height * scaleK) + 'px';
+  const WidthPx = (width * scaleK) + 'px';
+  const HeightPx = (height * scaleK) + 'px';
 
   // Cartesian system + scale ratio
   const X = (x:number) => x * scaleK;
@@ -148,11 +159,21 @@ const Canvas = ({
 
             <canvas
               ref={canvasRef}
-              width={scaledWidthPx}
-              height={scaledHeightPx}
+              // width={scaledWidthPx}
+              // height={scaledHeightPx}
 
-              // width={400}
-              // height={400}
+              width={WidthPx}
+              height={HeightPx}
+
+              // width={'400px'}
+              // height={'400px'}
+
+              // width={'200px'}
+              // height={'400px'}
+
+              // width={'400px'}
+              // height={'200px'}
+
             />
 
           </div>

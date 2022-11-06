@@ -7,7 +7,11 @@ const DataMain = () => {
 
 
       {/*give params in Cms*/}
+     {/*<Canvas  width={200} height={100}/>*/}
      <Canvas  width={200} height={200}/>
+
+
+     {/*<Canvas  width={300} height={150}/>*/}
     </div>
   );
 };
