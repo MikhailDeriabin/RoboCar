@@ -37,7 +37,7 @@ const Canvas = ({
                       light_intensity : 's',
                       is_tilted: false,
                       x: 50,
-                      y: 70,
+                      y: 100,
                     }
                   ]
                 }:CanvasProps) => {
@@ -58,6 +58,7 @@ const Canvas = ({
   const constantSideValue = 400;
 
   const scaleK = calculateScale(width,height,constantSideValue);
+  // const scaleK = 2
 
   console.log(scaleK)
 
@@ -65,8 +66,13 @@ const Canvas = ({
   const scaledWidth = (width * scaleK);
   const scaledHeight = (height * scaleK);
 
-  const WidthPx = (width * scaleK) + 'px';
-  const HeightPx = (height * scaleK) + 'px';
+
+
+  const scaledWidthPx = (width * scaleK) + 'px';
+  const scaledHeightPx = (height * scaleK) + 'px';
+
+  // const WidthPx = (width) + 'px';
+  // const HeightPx = (height) + 'px';
 
   // Cartesian system + scale ratio
   const X = (x:number) => x * scaleK;
@@ -86,14 +92,14 @@ const Canvas = ({
 
 
         //new center
-        context.translate(0, context.canvas.width);
+        context.translate(0, context.canvas.height);
         context.lineWidth = 10;
 
 
         //drow lines
         context.moveTo(0, 0);
-        context.lineTo(X(0), Y(190));
-        context.lineTo(X(20), Y(190));
+        context.lineTo(X(0), Y(20));
+        context.lineTo(X(20), Y(20));
         context.lineTo(X(20), Y(180));
         context.strokeStyle = '#ff0000';
         context.stroke();
@@ -141,7 +147,7 @@ const Canvas = ({
       <>
         <div className={styles.canvasWrapper}>
 
-          {/*<PopUpNormal  coords={{ x:150,y:scaledHeight + 150 }} title={'Info'}*/}
+          {/*<PopUpNormal  coords={{ x:150,y:scaledHeight - Y(50)*-1}} title={'Info'}*/}
           {/*             key={nanoid()} />*/}
 
           {points.map((p) => (
@@ -159,11 +165,12 @@ const Canvas = ({
 
             <canvas
               ref={canvasRef}
-              // width={scaledWidthPx}
-              // height={scaledHeightPx}
 
-              width={WidthPx}
-              height={HeightPx}
+              width={scaledWidthPx}
+              height={scaledHeightPx}
+
+              // width={WidthPx}
+              // height={HeightPx}
 
               // width={'400px'}
               // height={'400px'}
