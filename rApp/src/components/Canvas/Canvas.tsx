@@ -10,12 +10,14 @@ interface CanvasProps{
   width:number;
   height: number;
   pointsDefault?: IPointsInfo[];
+  robotMovements?: {x: number, y: number}[]
 }
 /**
  *
  * @param width in CMs
  * @param height in CMs
  * @param pointsDefault
+ * @param robotMovements
  * @constructor
  */
 const Canvas = ({
@@ -46,8 +48,15 @@ const Canvas = ({
                       light_intensity : 's',
                       is_tilted: false,
                       x: 55,
-                      y: 1200,
+                      y: 200,
                     }
+                  ],
+                  robotMovements = [
+                    {x:0,y:0},
+                    {x:0,y:200},
+                    {x:200,y:200},
+                    {x:200,y:100},
+                    {x:50,y:100},
                   ]
                 }:CanvasProps) => {
 
@@ -107,17 +116,20 @@ const Canvas = ({
 
 
         //drow lines
-        context.moveTo(0, 0);
-        context.lineTo(X(0), Y(200));
-        context.lineTo(X(200), Y(200));
-        context.lineTo(X(200), Y(100));
-        context.strokeStyle = '#ff0000';
-        context.stroke();
+        function drawLines(){
+          context.moveTo(0, 0);
+        robotMovements.forEach((m)=>{
+                  context.lineTo(X(m.x),Y(m.y));
+                  })
+          context.strokeStyle = '#5194f0';
+          context.stroke();
+        };
+        drawLines();
 
 
         const circles = points.map(p => {
           let str = new Path2D();
-          str.arc(X(p.x), Y(p.y), 5, 0, 2 * Math.PI);
+          str.arc(X(p.x), Y(p.y), 7, 0, 2 * Math.PI);
           context.fillStyle = 'red';
           context.fill(str);
           return str;
@@ -135,7 +147,7 @@ const Canvas = ({
               // context.fill(c);
             }
             else{
-              context.fillStyle = 'red';
+              context.fillStyle = '#FF0000';
               context.fill(c);
             }
           })

@@ -14,7 +14,6 @@ interface PopUpProps{
   canvas?: any,
   circlesGlobal?: Path2D[],
   ObjectToShowId: number
-  // isShow?: boolean
 }
 
 
@@ -42,23 +41,23 @@ const PopUpNormal = ({ObjectToShowId,canvas,circlesGlobal,coords,objectToShow={
       circlesGlobal?.map((c,index)=>{
 
 
-        if(currentCircleId === index){
-          context.fillStyle = 'orange';
-          context.fill(c);
-          context.stroke();
-        }
-
-        else{
-          context.fillStyle = 'red';
-          context.fill(c);
-          setCurrentCircleId(-1);
-          context.stroke();
-        }
+        // if(currentCircleId === index){
+        //   context.fillStyle = 'orange';
+        //   context.fill(c);
+        //   context.stroke();
+        // }
+        //
+        // else{
+        //   context.fillStyle = 'red';
+        //   context.fill(c);
+        //   setCurrentCircleId(-1);
+        //   context.stroke();
+        // }
 
       })
 
-      context.strokeStyle = '#ff0000';
-      context.stroke();
+      // context.strokeStyle = '#add8e6';
+      // context.stroke();
 
     }
 
@@ -66,7 +65,7 @@ const PopUpNormal = ({ObjectToShowId,canvas,circlesGlobal,coords,objectToShow={
       setCurrentCircleId(-1);
     }
 
-  },[toggleSignal,isShow])
+  },[isShow])
 
 
 
