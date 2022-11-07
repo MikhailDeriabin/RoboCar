@@ -7,3 +7,7 @@ export interface IPointsInfo{
   x: number,
   y: number,
 }
+
+// export interface ObjectWithId extends Object{
+//   id:number;
+// }

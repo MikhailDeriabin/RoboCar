@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import styles from './PopUpNormal.module.scss'
 import classnames from 'classnames';
 import { nanoid } from 'nanoid';
@@ -8,14 +8,18 @@ interface PopUpProps{
     x: number,
     y: number
   }
+
   title?: string,
   objectToShow? : Object,
+  canvas?: any,
+  circlesGlobal?: Path2D[],
+  ObjectToShowId: number
   // isShow?: boolean
 }
 
 
 
-const PopUpNormal = ({coords,objectToShow={
+const PopUpNormal = ({ObjectToShowId,canvas,circlesGlobal,coords,objectToShow={
   1:'hello',
   2:'bye',
   3: 'lol'
@@ -24,6 +28,48 @@ const PopUpNormal = ({coords,objectToShow={
 }}:PopUpProps) => {
 
   const[isShow,setIsShow] = useState(false);
+
+  const [currentCircleId,setCurrentCircleId] = useState(-2);
+
+  const [toggleSignal,setToggleSignal] = useState(false);
+
+  useLayoutEffect(()=>{
+
+
+    if(canvas){
+      const context = canvas.getContext('2d');
+
+      circlesGlobal?.map((c,index)=>{
+
+
+        if(currentCircleId === index){
+          context.fillStyle = 'orange';
+          context.fill(c);
+          context.stroke();
+        }
+
+        else{
+          context.fillStyle = 'red';
+          context.fill(c);
+          setCurrentCircleId(-1);
+          context.stroke();
+        }
+
+      })
+
+      context.strokeStyle = '#ff0000';
+      context.stroke();
+
+    }
+
+    return ()=>{
+      setCurrentCircleId(-1);
+    }
+
+  },[toggleSignal,isShow])
+
+
+
 
   return (
 
@@ -41,16 +87,12 @@ const PopUpNormal = ({coords,objectToShow={
 
       <div className={styles.clickArea}  style={{cursor:'pointer'}}>
         <span style={{opacity:'1'}}>*</span>
-        <div className={styles.clickAreaInner} onClick={()=>setIsShow(!isShow)} ></div>
+        <div className={styles.clickAreaInner} onClick={() => setIsShow(!isShow)} onMouseEnter={() => setToggleSignal(!toggleSignal)} onMouseMove={() => setCurrentCircleId(ObjectToShowId)}  />
       </div>
 
     </div>
     </div>
 
-
-    // <div className="popup"  onClick={()=>console.log()}  >Click me to toggle the popup!
-    //   <span className="popuptext" id="myPopup">A Simple Popup!</span>
-    // </div>
 
   );
 };

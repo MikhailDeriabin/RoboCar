@@ -22,7 +22,7 @@ const Canvas = ({
                   width,
                   height,
                   pointsDefault = [{
-                    id: 1,
+                    id: 0,
                     temp: 's',
                     humidity: 's',
                     light_intensity : 's',
@@ -31,13 +31,22 @@ const Canvas = ({
                     y: 50,
                   },
                     {
-                      id: 4,
+                      id: 1,
                       temp: 's',
                       humidity: 's',
                       light_intensity : 's',
                       is_tilted: false,
                       x: 50,
                       y: 100,
+                    },
+                    {
+                      id: 2,
+                      temp: 's',
+                      humidity: 's',
+                      light_intensity : 's',
+                      is_tilted: false,
+                      x: 55,
+                      y: 1200,
                     }
                   ]
                 }:CanvasProps) => {
@@ -58,7 +67,6 @@ const Canvas = ({
   const constantSideValue = 400;
 
   const scaleK = calculateScale(width,height,constantSideValue);
-  // const scaleK = 2
 
   console.log(scaleK)
 
@@ -78,12 +86,14 @@ const Canvas = ({
   const X = (x:number) => x * scaleK;
   const Y = (y: number) => y * scaleK * -1;
 
+  // @ts-ignore
 
-
-
+  let[canvasGlobal,setCanvasGlobal] = useState(null);
+  let[circlesGlobal,setCirclesGlobal] = useState<Path2D[]>([]);
 
     useLayoutEffect(()=>{
-        const canvas = canvasRef.current;
+      const canvas = canvasRef.current;
+      setCanvasGlobal(canvas);
         // @ts-ignore
         const context = canvas.getContext('2d');
 
@@ -112,6 +122,7 @@ const Canvas = ({
           context.fill(str);
           return str;
         });
+        setCirclesGlobal(circles);
 
         // Listen for mouse moves
         // @ts-ignore
@@ -120,8 +131,8 @@ const Canvas = ({
           circles.map((c, index) => {
 
             if (context.isPointInPath(c, event.offsetX, event.offsetY)) {
-              context.fillStyle = 'orange';
-              context.fill(c);
+              // context.fillStyle = 'orange';
+              // context.fill(c);
             }
             else{
               context.fillStyle = 'red';
@@ -151,7 +162,7 @@ const Canvas = ({
           {/*             key={nanoid()} />*/}
 
           {points.map((p) => (
-            <PopUpNormal objectToShow={p} coords={{ x: X(p.x), y: (scaledHeight*0.9775 - Y(p.y)*-1) }} title={'Info'}
+            <PopUpNormal ObjectToShowId={p.id} circlesGlobal={circlesGlobal} canvas={canvasGlobal} objectToShow={p} coords={{ x: X(p.x), y: (scaledHeight*0.9775 - Y(p.y)*-1) }} title={'Info'}
                          key={nanoid()} />
 
           ))}
