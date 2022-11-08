@@ -7,7 +7,6 @@
 #include <Component.h>
 #include <Util.h>
 #include "Sensor.h"
-#include <CommandValue.h>
 #include "SensorValue.h"
 
 DHTSensor::DHTSensor(int pinNumber) : pinNumber(pinNumber), Sensor(){

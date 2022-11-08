@@ -93,7 +93,7 @@ void Robot::turnLeft(int duration){
   if(duration != -1)
     delay(duration);
    else
-    delay(284); 
+    delay(600); 
   stopMoving();
 }
 
@@ -105,7 +105,7 @@ void Robot::turnRight(int duration){
   if(duration != -1)
     delay(duration);
    else
-    delay(284); 
+    delay(600); 
   stopMoving();
 }
 

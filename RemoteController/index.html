@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Remote Controller</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="./node_modules/mqtt/browserMqtt.js"></script>
+</head>
+<body>
+ <section class="remoteControllerSection">
+   <div class="remoteController">
+     <button id="forwardButton">forward</button>
+     <button id="leftButton">left</button>
+     <button id="backButton">back</button>
+     <button id="rightButton">right</button>
+   </div>
+   <div class="measureDiv">
+     <button id="measureCoordinatesButton">measure coordinates</button>
+   </div>
+ </section>
+<section class="fileSection">
+  <div>
+    <button id="saveToFileButton">save coordinates to file</button>
+  </div>
+</section>
+</body>
+<script type="module" src="js/index.js"/>
+</html>

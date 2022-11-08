@@ -5,7 +5,6 @@
 #include <Component.h>
 #include <Util.h>
 #include "Sensor.h"
-#include <CommandValue.h>
 #include "SensorValue.h"
 
 USSensor::USSensor(int trigPinNumber, int echoPinNumber) : trigPinNumber(trigPinNumber), echoPinNumber(echoPinNumber), Sensor(){
