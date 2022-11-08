@@ -41,7 +41,7 @@ import mqtt from "precompiled-mqtt";
 // client.on('message', function (topic: any, message: { toString: () => any; }) {
 //   // message is Buffer
 //   console.log(message.toString());
-//   client.end();
+//   client.end(); //this method disconnect client from broker completely, unsubscribe("topic") is better
 // })
 
 
