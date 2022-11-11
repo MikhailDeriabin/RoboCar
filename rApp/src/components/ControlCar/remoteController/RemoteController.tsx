@@ -2,49 +2,14 @@ import React, {useCallback, useEffect, useState} from 'react';
 import styles from './RemoteController.module.scss';
 import classnames from "classnames";
 import GoIcon from "../../UI/GoIcon";
-import { newMqtt } from '../../../main/preload';
+import {ControlCarApi} from "../../api/ControlCarApi";
+// import { newMqtt } from '../../../main/preload';
 
 
-// @ts-ignore
-import mqtt from "precompiled-mqtt";
 
-// const mqtt = require('mqtt')
-// const client  = mqtt.connect('mqtt://test.mosquitto.org')
+const controlCarApi = new ControlCarApi();
 
-// const options = {
-//   port: 1884,
-// }
-
-// const mqttOptions : object = {
-//   servers: [
-//     {
-//       // host: '78.27.125.143',
-//       host: "ws://78.27.125.143",
-//       // port: 1884
-//       port: 8883
-//     }
-//   ]
-// }
-//
-// const client = mqtt.connect('ws://78.27.125.143:8883')
-//
-// // const client  = mqtt.connect(mqttOptions)
-//
-// client.on('connect', function () {
-//   client.subscribe('presence', function (err:any) {
-//     if (!err) {
-//       client.publish('presence', 'Hello mqtt');
-//     }
-//   })
-// })
-//
-// client.on('message', function (topic: any, message: { toString: () => any; }) {
-//   // message is Buffer
-//   console.log(message.toString());
-//   client.end(); //this method disconnect client from broker completely, unsubscribe("topic") is better
-// })
-
-
+controlCarApi.helloMqtt();
 
 
 const RemoteController = () => {
@@ -56,6 +21,8 @@ const RemoteController = () => {
     right: false,
     bottom: false,
     left: false,
+    topLeft: false,
+    topRight: false
   }
 
   // console.log('rerender test')
@@ -66,35 +33,57 @@ const RemoteController = () => {
   //for css only
   const [isParentActive, setIsParentActive] = useState<boolean>(false);
 
-
+  const controlCarApi = new ControlCarApi();
 
   const eventLogic = () => {
+    // let moveForwardIntervalId: any, moveBackIntervalId:any, turnLeftIntervalId:any, turnRightIntervalId:any;
   return {
-    'centerLeft': function (){
+    'centerLeftMeasure': function (){
+      controlCarApi.measureCoordinates();
       setIsActive({...isActive , centerLeft: !isActive.centerLeft });
       setIsParentActive(true);
     },
-    'centerRight': function (){
+    'centerRightSendMap': function (){
       setIsActive({...isActive , centerRight: !isActive.centerRight });
       setIsParentActive(true);
     },
-    'top': function (){
+    'goForward': function (){
+      // moveForwardIntervalId = setInterval(controlCarApi.moveForward,10);
+      controlCarApi.moveForward();
       setIsActive({...isActive , top: !isActive.top });
       setIsParentActive(true);
     },
-    'right': function (){
+    'turnRight90deg': function (){
+      controlCarApi.turnRight();
       setIsActive({...isActive , right: !isActive.right });
       setIsParentActive(true);
     },
-    'bottom': function (){
+    'goBack': function (){
+      // moveForwardIntervalId = setInterval(controlCarApi.moveBack,10);
+      controlCarApi.moveBack();
       setIsActive({...isActive , bottom: !isActive.bottom });
       setIsParentActive(true);
     },
-    'left': function (){
+    'turnLeft90Deg': function (){
+      controlCarApi.turnLeft();
       setIsActive({...isActive , left: !isActive.left });
       setIsParentActive(true);
     },
+
+    'turnALittleLeft': function (){
+      controlCarApi.turnLeftMS();
+      setIsActive({...isActive , topLeft: !isActive.topLeft });
+      setIsParentActive(true);
+    },
+
+    'turnALittleRight': function (){
+      controlCarApi.turnRightMS()
+      setIsActive({...isActive , topRight: !isActive.topRight });
+      setIsParentActive(true);
+    },
+
     'setDefault': function (){
+      controlCarApi.stopMoving();
       setIsActive(defaultIsActive);
       setIsParentActive(false);
     },
@@ -105,26 +94,33 @@ const RemoteController = () => {
   const handleClick = useCallback((event:any) => {
     switch (event.key){
       case 'm':
-        eventLInstance.centerLeft();
+        eventLInstance.centerLeftMeasure();
         break;
       case 'k':
-        eventLInstance.centerRight();
+        eventLInstance.centerRightSendMap();
         break;
       case 'w':
       case 'ArrowUp':
-        eventLInstance.top();
+        eventLInstance.goForward();
         break;
       case 'd':
       case 'ArrowRight':
-        eventLInstance.right();
+        eventLInstance.turnRight90deg();
         break;
       case 's':
       case 'ArrowDown':
-        eventLInstance.bottom();
+        eventLInstance.goBack();
         break;
       case 'a':
       case 'ArrowLeft':
-        eventLInstance.left();
+        eventLInstance.turnLeft90Deg();
+        break;
+      case 'q':
+        eventLInstance.turnALittleLeft();
+        break;
+
+      case 'e':
+        eventLInstance.turnALittleRight();
         break;
     }
   },[]);
@@ -145,7 +141,7 @@ const RemoteController = () => {
         <div className={classnames(styles.cell, styles.centerButtons, styles.centerLeft,
           isActive.centerLeft && styles.cellIsActive)
         }
-             onMouseDown={eventLInstance.centerLeft}
+             onMouseDown={eventLInstance.centerLeftMeasure}
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
@@ -155,17 +151,17 @@ const RemoteController = () => {
         <div className={classnames(styles.cell, styles.centerButtons, styles.centerRight,
           isActive.centerRight && styles.cellIsActive
         )}
-             onMouseDown={eventLInstance.centerRight}
+             onMouseDown={eventLInstance.centerRightSendMap}
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
-            K
+            S
           </div>
         </div>
         <div className={classnames(styles.cell, styles.directionButtons, styles.top,
           isActive.top && styles.cellIsActive
         )}
-             onMouseDown={eventLInstance.top}
+             onMouseDown={eventLInstance.goForward}
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
@@ -175,7 +171,7 @@ const RemoteController = () => {
         <div className={classnames(styles.cell, styles.directionButtons, styles.right,
           isActive.right && styles.cellIsActive
         )}
-             onMouseDown={eventLInstance.right}
+             onMouseDown={eventLInstance.turnRight90deg}
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
@@ -185,7 +181,7 @@ const RemoteController = () => {
         <div className={classnames(styles.cell, styles.directionButtons, styles.bottom,
           isActive.bottom && styles.cellIsActive
         )}
-             onMouseDown={eventLInstance.bottom}
+             onMouseDown={eventLInstance.goBack}
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
@@ -195,13 +191,42 @@ const RemoteController = () => {
         <div className={classnames(styles.cell, styles.directionButtons, styles.left,
           isActive.left && styles.cellIsActive
         )}
-             onMouseDown={eventLInstance.left}
+             onMouseDown={eventLInstance.turnLeft90Deg}
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
             <GoIcon fill={'red'} position={'left'}/>
           </div>
         </div>
+
+        {/*modify us */}
+        <div className={classnames(styles.cell, styles.directionButtons, styles.topLeft,
+          isActive.topLeft && styles.cellIsActive
+        )}
+             onMouseDown={eventLInstance.turnALittleLeft}
+             onMouseUp={eventLInstance.setDefault}
+        >
+          <div className={classnames(styles.innerCell)}>
+            <GoIcon fill={'red'} position={'topLeft'}/>
+          </div>
+        </div>
+
+        <div className={classnames(styles.cell, styles.directionButtons, styles.topRight,
+          isActive.topRight && styles.cellIsActive
+        )}
+             onMouseDown={eventLInstance.turnALittleRight}
+             onMouseUp={eventLInstance.setDefault}
+        >
+          <div className={classnames(styles.innerCell)}>
+            <GoIcon fill={'red'} position={'topRight'}/>
+          </div>
+        </div>
+
+        {/*end*/}
+
+
+
+
 
       </div>
 

@@ -2,7 +2,7 @@ import React from "react";
 
 interface GoIconProps{
   fill?:string;
-  position?: 'top'|'right'| 'bottom' | 'left';
+  position?: 'top'|'right'| 'bottom' | 'topLeft' | 'topRight'  | 'left';
 }
 
 
@@ -24,6 +24,16 @@ const GoIcon = ({fill,position}:GoIconProps) => {
               rotate: '90deg'
             }
             :
+            position === 'topLeft' ?
+              {
+                rotate: '-140deg'
+              }
+            :
+              position === 'topRight' ?
+                {
+                  rotate: '-400deg'
+                }
+                :
             {
               rotate: '180deg'
             }
