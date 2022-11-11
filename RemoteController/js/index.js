@@ -9,13 +9,15 @@ const forwardButton = document.querySelector("#forwardButton");
 const leftButton = document.querySelector("#leftButton");
 const backButton = document.querySelector("#backButton");
 const rightButton = document.querySelector("#rightButton");
+const turnLeftButton = document.querySelector("#turnLeftButton");
+const turnRightButton = document.querySelector("#turnRightButton");
 const measureCoordinatesButton = document.querySelector("#measureCoordinatesButton");
 
 const saveToFileButton = document.querySelector("#saveToFileButton");
 
 let coordinatesArray = [];
 
-let moveForwardIntervalId, moveBackIntervalId;
+let moveForwardIntervalId, moveBackIntervalId, turnLeftIntervalId, turnRightIntervalId;
 
 forwardButton.addEventListener("mousedown", (e) => {
     moveForwardIntervalId = setInterval(moveForward, 10);
@@ -43,6 +45,22 @@ rightButton.addEventListener("click", (e) => {
 
 measureCoordinatesButton.addEventListener("click", (e) => {
     measureCoordinates();
+});
+
+turnLeftButton.addEventListener("mousedown", (e) => {
+    turnLeftIntervalId = setInterval(turnLeftMS, 10);
+});
+
+turnLeftButton.addEventListener("mouseup", (e) => {
+    stopMoving(turnLeftIntervalId);
+});
+
+turnRightButton.addEventListener("mousedown", (e) => {
+    turnRightIntervalId = setInterval(turnRightMS, 10);
+});
+
+turnRightButton.addEventListener("mouseup", (e) => {
+    stopMoving(turnRightIntervalId);
 });
 
 saveToFileButton.addEventListener("click", async (e) => {
@@ -76,6 +94,16 @@ function turnLeft() {
 
 function turnRight() {
     sendCommand(robotTopic, Command.TURN_RIGHT);
+}
+
+function turnLeftMS() {
+    const durationMs = 10;
+    sendCommand(robotTopic, Command.TURN_LEFT, durationMs);
+}
+
+function turnRightMS() {
+    const durationMs = 10;
+    sendCommand(robotTopic, Command.TURN_RIGHT, durationMs);
 }
 
 function stopMoving(intervalId){
