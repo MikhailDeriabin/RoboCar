@@ -8,7 +8,7 @@ const DataMain = () => {
 
       {/*give params in Cms*/}
      {/*<Canvas  width={200} height={100}/>*/}
-     <Canvas  width={500} height={500}/>
+     <Canvas  width={500} height={500} maxSideSizeInPx={400}/>
 
 
      {/*<Canvas  width={300} height={150}/>*/}

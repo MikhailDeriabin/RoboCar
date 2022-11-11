@@ -85,7 +85,7 @@ const PopUpNormal = ({ObjectToShowId,canvas,circlesGlobal,coords,objectToShow={
       </div>
 
       <div className={styles.clickArea}  style={{cursor:'pointer'}}>
-        <span style={{opacity:'1'}}>*</span>
+        <span style={{opacity:'0'}}>*</span>
         <div className={styles.clickAreaInner} onClick={() => setIsShow(!isShow)} onMouseEnter={() => setToggleSignal(!toggleSignal)} onMouseMove={() => setCurrentCircleId(ObjectToShowId)}  />
       </div>
 

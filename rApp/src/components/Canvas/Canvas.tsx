@@ -9,6 +9,7 @@ import { IPointsInfo } from '../../types/types';
 interface CanvasProps{
   width:number;
   height: number;
+  maxSideSizeInPx?: number;
   pointsDefault?: IPointsInfo[];
   robotMovements?: {x: number, y: number}[]
 }
@@ -23,6 +24,7 @@ interface CanvasProps{
 const Canvas = ({
                   width,
                   height,
+                  maxSideSizeInPx = 400,
                   pointsDefault = [{
                     id: 0,
                     temp: 's',
@@ -68,34 +70,27 @@ const Canvas = ({
    * scale ratio px:cm
    */
 
-
-  const calculateScale = (width:number,height:number,constantSideValue:number):number => {
+  /**
+   * The function which calculates the right scale of canvas by using maxSideSizeInPx as a reference
+   * @param width
+   * @param height
+   * @param maxSideSizeInPx
+   */
+  const calculateScale = (width:number,height:number,maxSideSizeInPx:number):number => {
     const comparableValue = (width>height) ? width : height;
-    return 100 / ((comparableValue * 100)/ constantSideValue);
+    return 100 / ((comparableValue * 100)/ maxSideSizeInPx);
   }
-  const constantSideValue = 400;
 
-  const scaleK = calculateScale(width,height,constantSideValue);
-
-  console.log(scaleK)
-
-
+  const scaleK = calculateScale(width,height,maxSideSizeInPx);
   const scaledWidth = (width * scaleK);
   const scaledHeight = (height * scaleK);
 
-
-
-  const scaledWidthPx = (width * scaleK) + 'px';
-  const scaledHeightPx = (height * scaleK) + 'px';
-
-  // const WidthPx = (width) + 'px';
-  // const HeightPx = (height) + 'px';
 
   // Cartesian system + scale ratio
   const X = (x:number) => x * scaleK;
   const Y = (y: number) => y * scaleK * -1;
 
-  // @ts-ignore
+
 
   let[canvasGlobal,setCanvasGlobal] = useState(null);
   let[circlesGlobal,setCirclesGlobal] = useState<Path2D[]>([]);
@@ -140,7 +135,7 @@ const Canvas = ({
         // @ts-ignore
         canvas.addEventListener('mousemove', function addPoints(event) {
 
-          circles.map((c, index) => {
+          circles.map((c) => {
 
             if (context.isPointInPath(c, event.offsetX, event.offsetY)) {
               // context.fillStyle = 'orange';
@@ -159,27 +154,19 @@ const Canvas = ({
         }
         )
 
-
-
-
     },[])
 
 
     return (
-
       <>
         <div className={styles.canvasWrapper}>
 
-          {/*<PopUpNormal  coords={{ x:150,y:scaledHeight - Y(50)*-1}} title={'Info'}*/}
-          {/*             key={nanoid()} />*/}
 
           {points.map((p) => (
             <PopUpNormal ObjectToShowId={p.id} circlesGlobal={circlesGlobal} canvas={canvasGlobal} objectToShow={p} coords={{ x: X(p.x), y: (scaledHeight*0.9775 - Y(p.y)*-1) }} title={'Info'}
                          key={nanoid()} />
 
           ))}
-
-
           <div className={styles.canvas}>
 
 
@@ -188,42 +175,18 @@ const Canvas = ({
 
             <canvas
               ref={canvasRef}
-
-              width={scaledWidthPx}
-              height={scaledHeightPx}
-
-              // width={WidthPx}
-              // height={HeightPx}
-
-              // width={'400px'}
-              // height={'400px'}
-
-              // width={'200px'}
-              // height={'400px'}
-
-              // width={'400px'}
-              // height={'200px'}
-
+              width={scaledWidth + 'px'}
+              height={scaledHeight + 'px'}
             />
-
           </div>
-
           <div className={styles.zeroScale}>
             <span className={styles.zero}>0</span>
-            {/*<span className={styles.scale}>Scale: {scaleK.toFixed(2)}:1 (px:cm)</span>*/}
             {scaleK >= 1 && <span className={styles.scale}>S: {scaleK.toFixed(2)}:1 (px:cm)</span>}
-
             {scaleK < 1 && <span className={styles.scale}>S: 1:{(10*scaleK).toFixed(2)} (px:cm)</span>}
-
-            {/*<span className={styles.scale}>S: {scaleK.toFixed(2)}:1 (px:cm)</span>*/}
           </div>
         </div>
-
       </>
-
     );
-
-
 }
 
 export default React.memo(Canvas)
