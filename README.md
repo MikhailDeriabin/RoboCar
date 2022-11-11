@@ -1,5 +1,9 @@
 # RoboCar
 
+Do not use spaces!
+End every command by semicolon (;)!
+Every received data from sensor will end with semicolon (;).
+
 ## MQTT instructions
 
 ### Sending command
