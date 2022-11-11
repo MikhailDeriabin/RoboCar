@@ -3,15 +3,17 @@ import Canvas from '../Canvas/Canvas';
 
 const DataMain = () => {
   return (
-    <div className='d-flex justify-content-center mt-5 '>
+    <div className='d-flex  flex-column align-items-center mt-5 '>
 
 
       {/*give params in Cms*/}
      {/*<Canvas  width={200} height={100}/>*/}
-     <Canvas  width={500} height={500} maxSideSizeInPx={400}/>
+     <Canvas  width={2000} height={2000} maxSideSizeInPx={400}/>
 
 
-     {/*<Canvas  width={300} height={150}/>*/}
+     <Canvas className='mt-5'  width={400} height={400}/>
+
+     <Canvas className='mt-5'  width={100} height={100}/>
     </div>
   );
 };

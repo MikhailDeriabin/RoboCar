@@ -7,6 +7,7 @@ import { IPointsInfo } from '../../types/types';
 
 
 interface CanvasProps{
+  className?: string;
   width:number;
   height: number;
   maxSideSizeInPx?: number;
@@ -22,6 +23,7 @@ interface CanvasProps{
  * @constructor
  */
 const Canvas = ({
+                  className,
                   width,
                   height,
                   maxSideSizeInPx = 400,
@@ -66,9 +68,7 @@ const Canvas = ({
   const canvasRef = useRef(null);
   const [points, setPoints] = useState(pointsDefault);
 
-  /**
-   * scale ratio px:cm
-   */
+
 
   /**
    * The function which calculates the right scale of canvas by using maxSideSizeInPx as a reference
@@ -81,6 +81,9 @@ const Canvas = ({
     return 100 / ((comparableValue * 100)/ maxSideSizeInPx);
   }
 
+  /**
+   * scale ratio px:cm
+   */
   const scaleK = calculateScale(width,height,maxSideSizeInPx);
   const scaledWidth = (width * scaleK);
   const scaledHeight = (height * scaleK);
@@ -158,7 +161,7 @@ const Canvas = ({
 
 
     return (
-      <>
+      <div className={className}>
         <div className={styles.canvasWrapper}>
 
 
@@ -181,11 +184,18 @@ const Canvas = ({
           </div>
           <div className={styles.zeroScale}>
             <span className={styles.zero}>0</span>
-            {scaleK >= 1 && <span className={styles.scale}>S: {scaleK.toFixed(2)}:1 (px:cm)</span>}
-            {scaleK < 1 && <span className={styles.scale}>S: 1:{(10*scaleK).toFixed(2)} (px:cm)</span>}
+            {/*{<span className={styles.scale}>S: {scaleK.toFixed(2)}:1 (px:cm)</span>}*/}
+            {scaleK >= 1 && <span className={styles.scale}>S: {scaleK % 1 == 0 ? scaleK : scaleK.toFixed(2)}:1 (cm:px)</span>}
+            {/*{scaleK < 1 && <span className={styles.scale}>S: 1:{(10*scaleK).toFixed(2)} (px:cm)</span>}*/}
+
+            {/*{scaleK < 1 && <span className={styles.scale}>S: 1:{(1 + (1-scaleK)).toFixed(2)} (px:cm)</span>}*/}
+
+            {/*{scaleK < 1 && <span className={styles.scale}>S: 1:{(scaleK).toFixed(2)} (cm:px)</span>}*/}
+
+            {scaleK < 1 && <span className={styles.scale}>S: {1}:{(1/scaleK) % 1 == 0  ? (1/scaleK) : (1/scaleK).toFixed(2)} (px:cm)</span>}
           </div>
         </div>
-      </>
+      </div>
     );
 }
 
