@@ -6,12 +6,12 @@
 
 Using Command enum.
 
-Command_ENUM:Value; / Command_ENUM;
+Command_ENUM:Value; OR Command_ENUM;
 
 Examples:
-MOVE_FORWARD:100; //move forward for 100 ms
-TURN_LEFT; // 90 deg
-TURN_LEFT:10; //turn left for 10 ms
+1. 11:100; //move forward for 100 ms
+2. 13; // turn left 90 deg
+3. 13:10; //turn left for 10 ms
 
 Commands description:
 
@@ -29,11 +29,11 @@ Commands description:
 
 Using SensorValues enum.
 
-SENSOR_VALUE_ENUM:Value; / SENSOR_VALUE_ENUM1:Value,SENSOR_VALUE_ENUM2:Value;
+SENSOR_VALUE_ENUM:Value; OR SENSOR_VALUE_ENUM1:Value,SENSOR_VALUE_ENUM2:Value;
 
 Examples:
-TEMPERATURE:25,HUMIDITY:80; //Data from temp+hum sensor
-LIGHT_INTENSITY:600; //Data from photoresistor
+1. 1:25,2:80; //Data from temp+hum sensor
+2. 3:600; //Data from photoresistor
 
 | Sensor Value    | Description                               |
 | --------------- | ----------------------------------------- | 
