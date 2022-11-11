@@ -15,7 +15,8 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 const IconPath = path.join(__dirname, 'img', 'logo.png');
-const mqtt = require('mqtt')
+const mqtt = require('mqtt');
+import sqlite3 from 'sqlite3'
 
 class AppUpdater {
   constructor() {
@@ -32,6 +33,39 @@ ipcMain.on('ipc-example', async (event, arg) => {
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
+
+// const database = new sqlite3.Database('./public/db.sqlite3', (err: any) => {
+// const database = new sqlite3.Database('./public/db.sqlite3', (err: any) => {
+// const db = new sqlite3.Database('./db/memory.db', (err: any) => {
+//   if (err) console.error('Database opening error: ', err);
+// });
+//
+// db.serialize(() => {
+//   db.run('CREATE TABLE lorem (info TEXT)');
+//
+//   const stmt = db.prepare('INSERT INTO lorem VALUES (?)');
+//   for (let i = 0; i < 10; i += 1) {
+//     stmt.run(`Ipsum ${i}`);
+//   }
+//   stmt.finalize();
+//
+//   db.each('SELECT rowid AS id, info FROM lorem', (_err, row) => {
+//     console.log(`${row.id}: ${row.info}`);
+//   });
+// });
+//
+// db.close();
+
+
+
+
+ipcMain.on('asynchronous-message', (event, arg) => {
+  const sql = arg;
+  db.all(sql, (err: { message: any; }, rows: any) => {
+    event.reply('asynchronous-reply', (err && err.message) || rows);
+  });
+});
+
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
