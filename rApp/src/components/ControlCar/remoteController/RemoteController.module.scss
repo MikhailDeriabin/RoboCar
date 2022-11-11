@@ -43,6 +43,16 @@ opacity: 1;
   grid-area: 4/5;
 }
 
+.topLeft{
+  grid-area: 2/2;
+}
+
+.topRight{
+  grid-area: 2/6;
+}
+
+
+
 .cell{
   position: relative;
   background-color: white;

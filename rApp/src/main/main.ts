@@ -59,12 +59,12 @@ ipcMain.on('ipc-example', async (event, arg) => {
 
 
 
-ipcMain.on('asynchronous-message', (event, arg) => {
-  const sql = arg;
-  db.all(sql, (err: { message: any; }, rows: any) => {
-    event.reply('asynchronous-reply', (err && err.message) || rows);
-  });
-});
+// ipcMain.on('asynchronous-message', (event, arg) => {
+//   const sql = arg;
+//   db.all(sql, (err: { message: any; }, rows: any) => {
+//     event.reply('asynchronous-reply', (err && err.message) || rows);
+//   });
+// });
 
 
 if (process.env.NODE_ENV === 'production') {
