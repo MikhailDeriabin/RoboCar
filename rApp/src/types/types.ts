@@ -14,12 +14,16 @@ export interface CoordsDistanceObject {
   distanceLeft : number,
 }
 
-export interface ICreateNewMapReqData {
+export interface IMapData {
   name: string,
   width: number,
   height: number,
   points: IPointsInfo[]
 }
+//
+// export interface Imap{
+//
+// }
 
 // export interface ObjectWithId extends Object{
 //   id:number;

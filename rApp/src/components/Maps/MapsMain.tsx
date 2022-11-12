@@ -1,12 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import Canvas from '../Canvas/Canvas';
+import {DataBaseApi} from "../../api/DataBaseApi";
 
 const MapsMain = () => {
+
 
 
   const [maps,setMaps] = useState();
 
   useEffect(()=>{
+
+    const dataBaseApi = new DataBaseApi();
+
+    // dataBaseApi.getAllMaps();
+
+
 
     //todo get all maps
 
@@ -18,10 +26,9 @@ const MapsMain = () => {
   return (
     <div className='d-flex  flex-column align-items-center mt-5 '>
 
-
       {/*give params in Cms*/}
      {/*<Canvas  width={200} height={100}/>*/}
-     <Canvas  width={2000} height={2000} maxSideSizeInPx={400}/>
+     {/*<Canvas  width={2000} height={2000} maxSideSizeInPx={400}/>*/}
 
 
      {/*<Canvas className='mt-5'  width={400} height={400}/>*/}

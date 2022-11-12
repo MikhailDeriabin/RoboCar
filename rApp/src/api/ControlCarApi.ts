@@ -7,8 +7,8 @@ import {SensorValue} from "./SensorsValuesEnums";
 import {controlCarPath} from "../data/paths";
 
 
-
-
+//  todo string to decode  ['1:21,2:39;', '3:1023;', '4:1;', '8:24;', '6:7;', '7:35;']
+//
 
 export class ControlCarApi {
 
@@ -17,6 +17,8 @@ export class ControlCarApi {
 
   // private coordinatesArray: IPointsInfo[] = [];
   private coordinatesArray: CoordsDistanceObject[] = [];
+
+  doneObject : any;
 
   // private coordinatesArray: number[][] = [];
 
@@ -54,50 +56,89 @@ helloMqtt(){
 })
 }
 
+
   measureTempHumid(){
-    this.client.subscribe(TopicEnums.DhtSensor)
-    this.sendCommand(TopicEnums.DhtSensor, Command.MEASURE);
+
+    this.client.subscribe(TopicEnums.DhtSensor.toString() + '/out')
+    this.sendCommand(TopicEnums.DhtSensor, Command.MEASURE,);
+    let msgCount = 0;
+    let dhtValue = null;
+    const messages: string[] = [];
     this.client.on("message", (topic: TopicEnums, payload: any) => {
-      const msg = payload.toString();
+      // const msg = payload.toString();
+      const msg = payload + '';
+      messages.push(msg);
+      msgCount++;
+      if(msgCount === 1){
+        this.client.unsubscribe(TopicEnums.DhtSensor.toString() + '/out');
+        dhtValue = messages[0];
+        // console.log(dhtValue);
+      }
       // const msgObject = JSON.parse(msg);
       // console.log(msgObject);
-      console.log(msg)
+      // console.log(msg)
       // this.client.unsubscribe(TopicEnums.DhtSensor);
-      }
-    );
-  }
-  measureIsTilted(){
-    this.client.subscribe(TopicEnums.TiltSensor)
-    this.sendCommand(TopicEnums.TiltSensor, Command.MEASURE);
-    this.client.on("message", (topic: TopicEnums, payload: any) => {
-        const msg = payload.toString();
-        // const msgObject = JSON.parse(msg);
-        // console.log(msgObject);
-        console.log(msg)
-        // this.client.unsubscribe(TopicEnums.TiltSensor);
       }
     );
   }
 
   measureLightIntensity(){
-    this.client.subscribe(TopicEnums.PhotoResistor)
+    this.client.subscribe(TopicEnums.PhotoResistor.toString() + '/out')
     this.sendCommand(TopicEnums.PhotoResistor, Command.MEASURE);
+
+    let msgCount = 0;
+    let photoResistorValue = null;
+    const messages: string[] = [];
+
     this.client.on("message", (topic: TopicEnums, payload: any) => {
-        const msg = payload.toString();
-        // const msgObject = JSON.parse(msg);
-        // console.log(msgObject);
-        console.log(msg)
-        // this.client.unsubscribe(TopicEnums.PhotoResistor);
+        // const msg = payload.toString()
+        const msg = payload + '';
+        messages.push(msg);
+        msgCount++;
+
+        if(msgCount === 2){
+          this.client.unsubscribe(TopicEnums.PhotoResistor.toString() + '/out');
+          photoResistorValue = messages[1];
+          // console.log(photoResistorValue);
+        }
       }
     );
   }
+
+
+  measureIsTilted(){
+    this.client.subscribe(TopicEnums.TiltSensor.toString() + '/out')
+    this.sendCommand(TopicEnums.TiltSensor, Command.MEASURE);
+    let msgCount = 0;
+    let isTilted = null;
+    const messages: string[] = [];
+    this.client.on("message", (topic: TopicEnums, payload: any) => {
+        const msg = payload + '';
+        messages.push(msg);
+        msgCount++;
+
+        if(msgCount === 3){
+          this.client.unsubscribe(TopicEnums.TiltSensor.toString() + '/out');
+          isTilted = messages[2];
+          // console.log(isTilted);
+        }
+
+        // const msgObject = JSON.parse(msg);
+        // console.log(msgObject);
+        // console.log(msgObject)
+        // this.client.unsubscribe(TopicEnums.TiltSensor);
+      }
+    );
+  }
+
+
 
 
 
 
   measureCoordinates() {
     // const  coordinatesArray: IPointsInfo[] = [];
-    this.client.subscribe(TopicEnums.UsSensorTopic);
+    this.client.subscribe(TopicEnums.UsSensorTopic.toString() + '/out');
     this.sendCommand(TopicEnums.RobotTopic, Command.GET_COORDINATES);
     let msgCount = 0;
     const messages: string[] = [];
@@ -105,10 +146,14 @@ helloMqtt(){
       const msg = payload.toString();
       messages.push(msg);
       msgCount++;
-      if(msgCount === 3){
-        this.client.unsubscribe(TopicEnums.UsSensorTopic);
+      if(msgCount === 6){
+        // this.client.unsubscribe(TopicEnums.UsSensorTopic);
+        this.client.unsubscribe(TopicEnums.UsSensorTopic.toString() + '/out');
         const coordinates = this.generateCoordsArr(messages);
-        // console.log(coordinates)
+        console.log("cords",coordinates)
+
+        console.log(messages);
+
         if(coordinates){
           this.coordinatesArray.push(coordinates);
         }
@@ -150,7 +195,8 @@ helloMqtt(){
   }
 
 
-  sendCommand(topic: TopicEnums, command: Command, param?: Number) {
+  // sendCommand(topic: TopicEnums, command: Command, param?: Number) {
+  sendCommand(topic: any, command: any, param?: Number) {
     let commandStr = command.toString();
     if(param != null)
       commandStr += ":" + param;
