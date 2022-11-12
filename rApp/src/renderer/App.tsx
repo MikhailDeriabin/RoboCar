@@ -2,7 +2,7 @@ import {MemoryRouter as Router, Routes, Route, useNavigate} from 'react-router-d
 import icon from '../../assets/icon.svg';
 import './App.css';
 import ControlCar from "../pages/ControlCar";
-import {Navigation} from "../components/Navigation";
+import {Navigation} from "../components/Navigation/Navigation";
 import Home from 'pages/Home';
 import Data from "../pages/Data";
 import { useState } from 'react';

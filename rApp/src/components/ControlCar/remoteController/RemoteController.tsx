@@ -2,18 +2,10 @@ import React, {useCallback, useEffect, useState} from 'react';
 import styles from './RemoteController.module.scss';
 import classnames from "classnames";
 import GoIcon from "../../UI/GoIcon";
-import {ControlCarApi} from "../../api/ControlCarApi";
-// import { newMqtt } from '../../../main/preload';
-
-
-
+import {ControlCarApi} from "../../../api/ControlCarApi";
 
 
 const controlCarApi = ControlCarApi.getInstance();
-
-
-
-
 
 const RemoteController = () => {
 
@@ -42,6 +34,10 @@ const RemoteController = () => {
   return {
     'centerLeftMeasure': function (){
       controlCarApi.measureCoordinates();
+      controlCarApi.measureTempHumid();
+      controlCarApi.measureIsTilted();
+      controlCarApi.measureLightIntensity();
+
       setIsActive({...isActive , centerLeft: !isActive.centerLeft });
       setIsParentActive(true);
     },
@@ -88,7 +84,6 @@ const RemoteController = () => {
       controlCarApi.stopMoving();
       setIsActive(defaultIsActive);
       setIsParentActive(false);
-      // React.cloneElement(div, [], [...children])
     },
   }
   }

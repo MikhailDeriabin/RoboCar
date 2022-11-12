@@ -8,6 +8,12 @@ export interface IPointsInfo{
   y: number,
 }
 
+export interface CoordsDistanceObject {
+  distanceFront : number,
+  distanceRight : number,
+  distanceLeft : number,
+}
+
 // export interface ObjectWithId extends Object{
 //   id:number;
 // }
