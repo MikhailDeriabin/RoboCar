@@ -22,7 +22,7 @@ Examples:
 Commands description:
 
 | Command         | Description                       | Notes                                              |
-| --------------- | --------------------------------- | -------------------------------------------------- |
+|-----------------|-----------------------------------|----------------------------------------------------|
 | MOVE_FORWARD    | move forward                      | no value=move forever, value=move time in ms (INT) |
 | MOVE_BACK       | move back                         | no value=move forever, value=move time in ms (INT) |
 | TURN_LEFT       | turn left                         | no value=turn 90 deg, value=turn time in ms (INT)  |
@@ -64,11 +64,11 @@ Same as devices to which a command need to be sent.
 
 ## API description
 
-| Path | Method | Description | Body example |
-| ---- | ------ | ----------- | ------------ |
-| map | POST | Create a new map | ------------ |
-| ---- | ------ | ----------- | ------------ |
-| ---- | ------ | ----------- | ------------ |
-| ---- | ------ | ----------- | ------------ |
-| ---- | ------ | ----------- | ------------ |
-| ---- | ------ | ----------- | ------------ |
+| Path      | Method | Description                       | Body example                                                                                                                                                                                                                                                                                                                                                                                               |
+|-----------|--------|-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| map       | POST   | Create a new map (with points)    | {<br/> "name": "firstMap",<br/> "width": 400, <br/>"height": 200, <br/>"points": [<br/> { "x":0, "y":20, "temperature": 23, "humidity": 87, "lightIntensity": 600, "isTilted": false},<br/> { "x":100, "y":60, "temperature": 0, "humidity": 0, "lightIntensity": 200, "isTilted": false},<br/> { "x":0, "y":20, "temperature": 23},<br/> { "x":0, "y":20, "humidity": 87, "lightIntensity": 600} <br/>] } |
+| map       | GET    | Get all maps data(without points) |                                                                                                                                                                                                                                                                                                                                                                                                            |
+| map/:id   | GET    | Get map by id (with points)       |                                                                                                                                                                                                                                                                                                                                                                                                            |
+| map/:id   | DELETE | Delete map by id (with points)    |                                                                                                                                                                                                                                                                                                                                                                                                            |
+| point/:id | GET    | Get point by id                   |                                                                                                                                                                                                                                                                                                                                                                                                            |
+| point/:id | DELETE | Delete point by id                |                                                                                                                                                                                                                                                                                                                                                                                                            |
