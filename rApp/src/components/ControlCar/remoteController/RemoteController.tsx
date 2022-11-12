@@ -2,15 +2,10 @@ import React, {useCallback, useEffect, useState} from 'react';
 import styles from './RemoteController.module.scss';
 import classnames from "classnames";
 import GoIcon from "../../UI/GoIcon";
-import {ControlCarApi} from "../../api/ControlCarApi";
-// import { newMqtt } from '../../../main/preload';
+import {ControlCarApi} from "../../../api/ControlCarApi";
 
 
-
-const controlCarApi = new ControlCarApi();
-
-controlCarApi.helloMqtt();
-
+const controlCarApi = ControlCarApi.getInstance();
 
 const RemoteController = () => {
 
@@ -33,13 +28,16 @@ const RemoteController = () => {
   //for css only
   const [isParentActive, setIsParentActive] = useState<boolean>(false);
 
-  const controlCarApi = new ControlCarApi();
 
   const eventLogic = () => {
     // let moveForwardIntervalId: any, moveBackIntervalId:any, turnLeftIntervalId:any, turnRightIntervalId:any;
   return {
     'centerLeftMeasure': function (){
       controlCarApi.measureCoordinates();
+      controlCarApi.measureTempHumid();
+      controlCarApi.measureIsTilted();
+      controlCarApi.measureLightIntensity();
+
       setIsActive({...isActive , centerLeft: !isActive.centerLeft });
       setIsParentActive(true);
     },
@@ -96,7 +94,7 @@ const RemoteController = () => {
       case 'm':
         eventLInstance.centerLeftMeasure();
         break;
-      case 'k':
+      case 't':
         eventLInstance.centerRightSendMap();
         break;
       case 'w':
@@ -126,14 +124,18 @@ const RemoteController = () => {
   },[]);
 
 
+
+
   useEffect(() => {
-    window.addEventListener("keypress", handleClick);
+    window.addEventListener("keydown", handleClick);
     window.addEventListener("keyup",  eventLInstance.setDefault);
     return () => {
-      window.removeEventListener("keypress", handleClick);
-      window.addEventListener("keyup",  eventLInstance.setDefault);
+      window.removeEventListener("keydown", handleClick);
+      window.removeEventListener("keyup",  eventLInstance.setDefault);
     };
   }, []);
+
+
 
   return (
     <div className={classnames(styles.wrapper, isParentActive && styles.elementActive)}>
@@ -155,7 +157,7 @@ const RemoteController = () => {
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
-            S
+            T
           </div>
         </div>
         <div className={classnames(styles.cell, styles.directionButtons, styles.top,

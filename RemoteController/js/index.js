@@ -126,6 +126,7 @@ function measureCoordinates() {
             client.unsubscribe(usSensorTopic);
             const coordinates = generateCoordsArr(messages);
             coordinatesArray.push(coordinates);
+            console.log(coordinatesArray)
         }
     });
 }

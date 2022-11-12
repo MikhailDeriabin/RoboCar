@@ -2,12 +2,14 @@ import {MemoryRouter as Router, Routes, Route, useNavigate} from 'react-router-d
 import icon from '../../assets/icon.svg';
 import './App.css';
 import ControlCar from "../pages/ControlCar";
-import {Navigation} from "../components/Navigation";
+import {Navigation} from "../components/Navigation/Navigation";
 import Home from 'pages/Home';
 import Data from "../pages/Data";
 import { useState } from 'react';
 
 import { sendAsync } from '../main/preload';
+import MapsMain from "../components/Maps/MapsMain";
+import MapData from "../components/Maps/MapData";
 
 // @ts-ignore
 // import {sendAsync} from './message-control/renderer';
@@ -38,7 +40,10 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/controlCar" element={<ControlCar />} />
-        <Route path="/data" element={<Data/>} />
+
+        <Route path="/maps" element={<MapsMain/>} />
+        <Route path="/maps/:id" element={<MapData/>} />
+
       </Routes>
     </Router>
     </div>

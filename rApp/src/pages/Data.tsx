@@ -1,9 +1,9 @@
 import React from 'react';
-import DataMain from '../components/Data/DataMain';
+import MapsMain from '../components/Maps/MapsMain';
 
 const Data = () => {
   return (
-    <DataMain/>
+    <MapsMain/>
   );
 };
 
