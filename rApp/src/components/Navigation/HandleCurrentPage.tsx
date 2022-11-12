@@ -5,12 +5,17 @@ const HandleCurrentPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // console.log(location.state)
+
   return (
     <>
       <h2 className={'mt-2'}> 👉️
         <span style={{'cursor': "pointer"}} onClick={()=>navigate('/')}>home</span>
 
         <span >{location.pathname}</span>
+
+
+
 
       </h2>
     </>

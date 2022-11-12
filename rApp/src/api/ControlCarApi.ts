@@ -4,11 +4,14 @@ import {Command} from "./CommandEnums";
 import {TopicEnums} from "./TopicEnums";
 import {CoordsDistanceObject} from "../types/types";
 import {SensorValue} from "./SensorsValuesEnums";
+import {controlCarPath} from "../data/paths";
+
+
+
 
 
 export class ControlCarApi {
 
-   // static instance: ControlCarApi;
   private static instance: ControlCarApi;
   private readonly client: any;
 
@@ -18,7 +21,12 @@ export class ControlCarApi {
   // private coordinatesArray: number[][] = [];
 
   private constructor() {
-    this.client = mqtt.connect('ws://78.27.125.143:8883');
+
+    // this.client = mqtt.connect('ws://78.27.125.143:8883');
+    this.client = mqtt.connect(controlCarPath);
+
+    console.log(controlCarPath)
+
   }
 
   public static getInstance(): ControlCarApi {
