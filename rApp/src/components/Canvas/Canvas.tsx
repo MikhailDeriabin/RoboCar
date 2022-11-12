@@ -29,28 +29,28 @@ const Canvas = ({
                   maxSideSizeInPx = 400,
                   pointsDefault = [{
                     id: 0,
-                    temp: 's',
-                    humidity: 's',
-                    light_intensity : 's',
-                    is_tilted: false,
+                    temperature: 0,
+                    humidity: 0,
+                    lightIntensity: 0,
+                    isTilted: false,
                     x: 400,
                     y: 50,
                   },
                     {
                       id: 1,
-                      temp: 's',
-                      humidity: 's',
-                      light_intensity : 's',
-                      is_tilted: false,
+                      temperature: 10,
+                      humidity: 20,
+                      lightIntensity : 0,
+                      isTilted: false,
                       x: 50,
                       y: 100,
                     },
                     {
                       id: 2,
-                      temp: 's',
-                      humidity: 's',
-                      light_intensity : 's',
-                      is_tilted: false,
+                      temperature: 10,
+                      humidity: 30,
+                      lightIntensity : 0,
+                      isTilted: false,
                       x: 55,
                       y: 200,
                     }
@@ -113,16 +113,16 @@ const Canvas = ({
         context.lineWidth = 10;
 
 
-        //drow lines
-        function drawLines(){
-          context.moveTo(0, 0);
-        robotMovements.forEach((m)=>{
-                  context.lineTo(X(m.x),Y(m.y));
-                  })
-          context.strokeStyle = '#5194f0';
-          context.stroke();
-        };
-        drawLines();
+        // //draw lines
+        // function drawLines(){
+        //   context.moveTo(0, 0);
+        // robotMovements.forEach((m)=>{
+        //           context.lineTo(X(m.x),Y(m.y));
+        //           })
+        //   context.strokeStyle = '#5194f0';
+        //   context.stroke();
+        // };
+        // drawLines();
 
 
         const circles = points.map(p => {
