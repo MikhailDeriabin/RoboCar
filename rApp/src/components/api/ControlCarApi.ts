@@ -8,18 +8,17 @@ import {SensorValue} from "./SensorsValuesEnums";
 
 export class ControlCarApi {
 
+   // static instance: ControlCarApi;
   private static instance: ControlCarApi;
-
-
   private readonly client: any;
   private coordinatesArray: IPointsInfo[] = [];
 
-
-  constructor() {
+  private constructor() {
     this.client = mqtt.connect('ws://78.27.125.143:8883');
   }
 
-  public static get Instance(): ControlCarApi {
+  public static getInstance(): ControlCarApi {
+
     if (!ControlCarApi.instance) {
       ControlCarApi.instance = new ControlCarApi();
     }
@@ -148,8 +147,6 @@ helloMqtt(){
 // })
 
 
-
-
-
-
 }
+
+// export default new ControlCarApi();

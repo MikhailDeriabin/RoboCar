@@ -8,10 +8,11 @@ import {ControlCarApi} from "../../api/ControlCarApi";
 
 
 
-const controlCarApi = ControlCarApi.Instance;
-console.log();
 
-controlCarApi.helloMqtt();
+const controlCarApi = ControlCarApi.getInstance();
+
+
+
 
 
 const RemoteController = () => {
@@ -35,7 +36,6 @@ const RemoteController = () => {
   //for css only
   const [isParentActive, setIsParentActive] = useState<boolean>(false);
 
-  const controlCarApi = new ControlCarApi();
 
   const eventLogic = () => {
     // let moveForwardIntervalId: any, moveBackIntervalId:any, turnLeftIntervalId:any, turnRightIntervalId:any;
@@ -88,6 +88,7 @@ const RemoteController = () => {
       controlCarApi.stopMoving();
       setIsActive(defaultIsActive);
       setIsParentActive(false);
+      // React.cloneElement(div, [], [...children])
     },
   }
   }
@@ -128,14 +129,18 @@ const RemoteController = () => {
   },[]);
 
 
+
+
   useEffect(() => {
-    window.addEventListener("keypress", handleClick);
+    window.addEventListener("keydown", handleClick);
     window.addEventListener("keyup",  eventLInstance.setDefault);
     return () => {
-      window.removeEventListener("keypress", handleClick);
-      window.addEventListener("keyup",  eventLInstance.setDefault);
+      window.removeEventListener("keydown", handleClick);
+      window.removeEventListener("keyup",  eventLInstance.setDefault);
     };
   }, []);
+
+
 
   return (
     <div className={classnames(styles.wrapper, isParentActive && styles.elementActive)}>
