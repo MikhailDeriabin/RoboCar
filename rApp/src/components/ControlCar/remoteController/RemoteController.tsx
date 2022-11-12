@@ -7,7 +7,9 @@ import {ControlCarApi} from "../../api/ControlCarApi";
 
 
 
-const controlCarApi = new ControlCarApi();
+
+const controlCarApi = ControlCarApi.Instance;
+console.log();
 
 controlCarApi.helloMqtt();
 
@@ -96,7 +98,7 @@ const RemoteController = () => {
       case 'm':
         eventLInstance.centerLeftMeasure();
         break;
-      case 'k':
+      case 't':
         eventLInstance.centerRightSendMap();
         break;
       case 'w':
@@ -155,7 +157,7 @@ const RemoteController = () => {
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
-            S
+            T
           </div>
         </div>
         <div className={classnames(styles.cell, styles.directionButtons, styles.top,
