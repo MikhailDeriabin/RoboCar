@@ -1,7 +1,7 @@
 import React from 'react';
 import Canvas from '../Canvas/Canvas';
 
-const DataMain = () => {
+const MapsMain = () => {
   return (
     <div className='d-flex  flex-column align-items-center mt-5 '>
 
@@ -18,4 +18,4 @@ const DataMain = () => {
   );
 };
 
-export default DataMain;
+export default MapsMain;

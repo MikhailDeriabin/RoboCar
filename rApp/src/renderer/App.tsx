@@ -38,7 +38,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/controlCar" element={<ControlCar />} />
-        <Route path="/data" element={<Data/>} />
+        <Route path="/maps" element={<Data/>} />
       </Routes>
     </Router>
     </div>
