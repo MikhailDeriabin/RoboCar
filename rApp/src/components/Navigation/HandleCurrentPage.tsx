@@ -8,7 +8,7 @@ const HandleCurrentPage = () => {
   return (
     <>
       <h2 className={'mt-2'}> 👉️
-        <span style={{'cursor': "pointer"}} onClick={()=>navigate('/')}>Home</span>
+        <span style={{'cursor': "pointer"}} onClick={()=>navigate('/')}>home</span>
 
         <span >{location.pathname}</span>
 
