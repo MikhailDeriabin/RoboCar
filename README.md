@@ -56,9 +56,13 @@ Examples:
 Same as devices to which a command need to be sent.
 
 1/0 robot
+
 1/1 usSensor (distance)
+
 1/2 dhtSensor (temp+hum)
+
 1/3 tiltSensor (is tilted or not)
+
 1/4 photoResistor (light intensity)
 
 
