@@ -99,10 +99,11 @@ void sendData(char str[], int strSize){
       break;
     }
   }
-  int idSize = valueStartIndex - 1;
+  const int idSize = valueStartIndex - 1;
   
   //TODO: calculate clientId size
-  int topicSize = 1 + idSize + 1;
+  //int topicSize = 1 + idSize + 1 + 2;
+  const int topicSize = 7;
   char topic[topicSize];
   int topicIndex = 0;
   for(int j=0; j<1; j++){
@@ -115,6 +116,15 @@ void sendData(char str[], int strSize){
     topic[topicIndex] = str[j];
     topicIndex++;
   }
+
+  char topicEnd[] = {'/', 'o', 'u', 't'};
+  for(int j=0; j<4; j++){
+    topic[topicIndex] = topicEnd[j];
+    topicIndex++;
+  }
+
+  if(topicIndex < topicSize)
+    topic[topicIndex] = 'o';
 
   int valueStringSize = strSize - valueStartIndex;
   char valueString[valueStringSize];
