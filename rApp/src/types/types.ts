@@ -15,10 +15,14 @@ export interface CoordsDistanceObject {
 }
 
 interface IMapDataBase{
-  name: string,
   width: number,
   height: number,
 }
+
+interface IMapDataWithName{
+  name: string,
+}
+
 interface IMapDataGetFromApi extends IMapDataBase{
   id:number,
   creationDate: string
@@ -28,7 +32,9 @@ interface IMapDataWithPoints extends IMapDataBase{
   points: IPointsInfo[]
 }
 
-export interface IMapDataPost extends IMapDataWithPoints{}
+export interface IMapDataPostWithoutName extends IMapDataWithPoints{}
+
+export interface IMapDataPostWithName extends IMapDataWithPoints,IMapDataWithName{}
 
 export interface IMapDataGetWithoutPoints extends IMapDataGetFromApi{}
 

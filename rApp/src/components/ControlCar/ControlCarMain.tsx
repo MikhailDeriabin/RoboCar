@@ -32,8 +32,6 @@ const ControlCarMain = () => {
       <div className='mb-3'>
       <RemoteController/>
       </div>
-
-
     </div>
   );
 };
