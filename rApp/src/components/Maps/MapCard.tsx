@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, Card} from "react-bootstrap";
 import {IMapDataGetWithoutPoints} from "../../types/types";
+import {convertStringToDate} from "../../utils/convertStringToDate";
 
 interface MapCardProps{
   dataObject: IMapDataGetWithoutPoints,
@@ -10,7 +11,7 @@ interface MapCardProps{
 
 const MapCard = ({dataObject,onClickSubmitButton,onClickDeleteButton}: MapCardProps) => {
 
-  console.log("lol")
+  const ConvertedDate = convertStringToDate(dataObject.creationDate);
 
   return (
     <Card
@@ -23,7 +24,7 @@ const MapCard = ({dataObject,onClickSubmitButton,onClickDeleteButton}: MapCardPr
         <Card.Text>
             <div><b>Id:</b> {dataObject?.id}</div>
             <div><b>Map Size:</b> {dataObject?.width}x{dataObject?.height}(cm)</div>
-            {/*<div><b>Created:</b> {dataObject?.creationDate}</div>*/}
+            <div><b>Created:</b> {ConvertedDate.getDate()}.{ConvertedDate.getMonth() + 1}.{ConvertedDate.getFullYear()}</div>
         </Card.Text>
         <Button className='mt-auto' style={{marginLeft: 'auto' , marginRight: 'auto'}} onClick={onClickSubmitButton}>
           Click to see the map

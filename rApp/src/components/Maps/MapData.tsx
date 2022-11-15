@@ -33,11 +33,6 @@ const MapData = () => {
         const dataResult: IMapDataGetOne = data?.result
 
         if(dataResult){
-          const creationDate = convertStringToDate(dataResult.creationDate);
-
-          // console.log(creationDate);
-
-          dataResult.creationDate = creationDate;
           setMapData(dataResult)
         }
       }
