@@ -24,7 +24,7 @@ export class DataBaseApi {
     }
 
     // @ts-ignore
-    const resp = await fetch(`${apiPath/map}`, reqOptions);
+    const resp = await fetch(`${apiPath}/map`, reqOptions);
     const respJson = await resp.json();
     return respJson;
   }
@@ -39,9 +39,11 @@ export class DataBaseApi {
     }
 
     // @ts-ignore
-    const resp = await fetch(`${apiPath/map}`, reqOptions);
+    const resp = await fetch(`${apiPath}/map`, reqOptions);
     const respJson = await resp.json();
+    console.log(respJson);
     return respJson;
+
   }
 
   getMapById = async (id:number) => {
@@ -54,7 +56,7 @@ export class DataBaseApi {
     }
 
     // @ts-ignore
-    const resp = await fetch(`${apiPath/map/{id}}`, reqOptions);
+    const resp = await fetch(`${apiPath}/map/${id}`, reqOptions);
     const respJson = await resp.json();
     return respJson;
   }
@@ -69,7 +71,7 @@ export class DataBaseApi {
       credentials: 'include'
     }
     // @ts-ignore
-    const resp = await fetch(`${apiPath/map/{id}}`, reqOptions);
+    const resp = await fetch(`${apiPath}/map/${id}`, reqOptions);
     const respJson = await resp.json();
     return respJson;
   }
@@ -84,7 +86,7 @@ export class DataBaseApi {
     }
 
     // @ts-ignore
-    const resp = await fetch(`${apiPath/point/{id}}`, reqOptions);
+    const resp = await fetch(`${apiPath}/point/${id}`, reqOptions);
     const respJson = await resp.json();
     return respJson;
   }
@@ -98,7 +100,8 @@ export class DataBaseApi {
       credentials: 'include'
     }
     // @ts-ignore
-    const resp = await fetch(`${apiPath/point/{id}}`, reqOptions);
+    // const resp = await fetch(`${apiPath/point/{id}}`, reqOptions);
+    const resp = await fetch(`${apiPath}/point/${id}`, reqOptions);
     const respJson = await resp.json();
     return respJson;
   }

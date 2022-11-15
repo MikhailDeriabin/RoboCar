@@ -16,15 +16,20 @@ const MapsMain = () => {
 
   const [maps,setMaps] = useState<IMapDataGetWithoutPoints[]>();
 
+  const dataBaseApi = new DataBaseApi();
+
   useEffect(()=>{
 
-    const dataBaseApi = new DataBaseApi();
 
-    // dataBaseApi.getAllMaps();
+
+    dataBaseApi.getAllMaps().catch(
+
+    )
+
     //todo get all maps
 
 
-    setMaps(mockMaps)
+    // setMaps(mockMaps)
   },[])
 
 
