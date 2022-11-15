@@ -33,10 +33,10 @@ const RemoteController = () => {
     // let moveForwardIntervalId: any, moveBackIntervalId:any, turnLeftIntervalId:any, turnRightIntervalId:any;
   return {
     'centerLeftMeasure': function (){
-      controlCarApi.measureTempHumid();
-      controlCarApi.measureLightIntensity();
-      controlCarApi.measureIsTilted();
-      controlCarApi.measureCoordinates();
+      // controlCarApi.measureTempHumid();
+      // controlCarApi.measureLightIntensity();
+      // controlCarApi.measureIsTilted();
+      // controlCarApi.measureCoordinates();
 
       setIsActive({...isActive , centerLeft: !isActive.centerLeft });
       setIsParentActive(true);
