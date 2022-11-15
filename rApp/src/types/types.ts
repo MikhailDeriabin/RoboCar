@@ -21,7 +21,7 @@ interface IMapDataBase{
 }
 interface IMapDataGetFromApi extends IMapDataBase{
   id:number,
-  date: Date
+  creationDate: string
 }
 
 interface IMapDataWithPoints extends IMapDataBase{

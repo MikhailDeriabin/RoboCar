@@ -1,5 +1,5 @@
 import {apiPath, controlCarPath} from "../data/paths";
-import {IMapDataPost} from "../types/types";
+import {IMapDataGetOne, IMapDataPost} from "../types/types";
 
 
 export class DataBaseApi {
@@ -22,7 +22,6 @@ export class DataBaseApi {
       credentials: 'include',
       body: JSON.stringify({...reqData})
     }
-
     // @ts-ignore
     const resp = await fetch(`${apiPath}/map`, reqOptions);
     const respJson = await resp.json();
@@ -41,7 +40,7 @@ export class DataBaseApi {
     // @ts-ignore
     const resp = await fetch(`${apiPath}/map`, reqOptions);
     const respJson = await resp.json();
-    console.log(respJson);
+    // console.log(respJson);
     return respJson;
 
   }
