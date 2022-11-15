@@ -1,5 +1,6 @@
 import { Command } from "./Command.js";
 import { SensorValue } from "./SensorValue.js";
+import { CurrentDirection } from "./CurrentDirection.js";
 const client = mqtt.connect('ws://192.168.50.91:8883');
 
 const robotTopic = "1/0";
@@ -112,7 +113,7 @@ function stopMoving(intervalId){
 }
 
 function measureCoordinates() {
-    client.subscribe(usSensorTopic);
+    client.subscribe(usSensorTopic + "/out");
     sendCommand(robotTopic, Command.GET_COORDINATES);
     let msgCount = 0;
 
@@ -122,11 +123,15 @@ function measureCoordinates() {
         const msg = payload.toString();
         messages.push(msg);
         msgCount++;
+        console.log("msg came");
         if(msgCount === 3){
             client.unsubscribe(usSensorTopic);
             const coordinates = generateCoordsArr(messages);
             coordinatesArray.push(coordinates);
-            console.log(coordinatesArray)
+
+            const xYObj = convertToXYForm(coordinates[0], coordinates[1], coordinates[2], 60, 100, CurrentDirection.BACK);
+            console.log("measured");
+            console.log(xYObj);
         }
     });
 }
@@ -175,4 +180,31 @@ function generateCoordsArr(msgArr) {
     }
 
     return result;
+}
+
+function convertToXYForm(frontDistance, leftDistance, rightDistance, width, height, currentDirection){
+    const coords = {};
+    switch (currentDirection) {
+        case CurrentDirection.FORWARD:
+            coords.x = leftDistance;
+            coords.y = height-frontDistance;
+            break;
+
+        case CurrentDirection.LEFT:
+            coords.x = frontDistance;
+            coords.y = leftDistance;
+            break;
+
+        case CurrentDirection.BACK:
+            coords.x = rightDistance;
+            coords.y = frontDistance;
+            break;
+
+        case CurrentDirection.RIGHT:
+            coords.x = width-frontDistance;
+            coords.y = rightDistance;
+            break;
+    }
+
+    return coords;
 }
