@@ -15,11 +15,14 @@ const MapsMain = () => {
     // const mockMaps = MockMapsWithoutPoints;
 
   const [maps,setMaps] = useState<IMapDataGetWithoutPoints[]>();
+  const [signal,setSignal] = useState(false)
 
   const handleDeleteMapInfo = async (id:number) =>{
+
     try {
       await dataBaseApi.deleteMapById(id);
-      setHandleFetch(!handleFetch)
+      setHandleFetch(!handleFetch);
+      setSignal(!signal)
     }
     catch (e){
       alert(e)
@@ -39,10 +42,8 @@ const MapsMain = () => {
       alert(e)
       }
     }
-    fetchData().catch(e=>{
-      alert(e)
-    });
-  },[])
+    fetchData();
+  },[signal]);
 
 const [handleFetch, setHandleFetch] = useState(false);
   if(maps) {

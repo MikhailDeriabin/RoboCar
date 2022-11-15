@@ -3,9 +3,11 @@ import styles from './RemoteController.module.scss';
 import classnames from "classnames";
 import GoIcon from "../../UI/GoIcon";
 import {ControlCarApi} from "../../../api/ControlCarApi";
+import {ControlCarApi2} from "../../../api/ControlCarApi2";
 
 
 const controlCarApi = ControlCarApi.getInstance();
+const controlCarApi2 = ControlCarApi2.getInstance();
 
 const RemoteController = () => {
 
@@ -37,6 +39,8 @@ const RemoteController = () => {
       // controlCarApi.measureLightIntensity();
       // controlCarApi.measureIsTilted();
       // controlCarApi.measureCoordinates();
+      controlCarApi2.measureCoordinates();
+
 
       setIsActive({...isActive , centerLeft: !isActive.centerLeft });
       setIsParentActive(true);

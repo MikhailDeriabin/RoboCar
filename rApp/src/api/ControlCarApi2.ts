@@ -13,6 +13,9 @@ export class ControlCarApi2 {
   private readonly client: any;
 
   public points = [];
+  currentDirection = CurrentDirection.FORWARD;
+  public width: number = 100;
+  public height: number = 100;
 
   private coordinatesArray: CoordsDistanceObject[] = [];
 
@@ -31,32 +34,26 @@ export class ControlCarApi2 {
     return ControlCarApi2.instance;
   }
 
-  measureCoordinates() {
-    const robotTopic = "1/0";
-    const usTopic = "1/1";
-    const dhtTopic = "1/2";
-    const tiltTopic = "1/3";
-    const photoTopic = "1/4";
-
-    const topics = [ robotTopic, usTopic, dhtTopic, tiltTopic, photoTopic ];
+   measureCoordinates() {
+    const topics = [ TopicEnums.RobotTopic, TopicEnums.UsSensorTopic, TopicEnums.DhtSensor, TopicEnums.TiltSensor, TopicEnums.PhotoResistor ];
     for(let i=1; i<topics.length; i++)
       this.client.subscribe(topics[i] + "/out");
 
     for(let i=2; i<topics.length; i++)
       this.sendCommand(topics[i], Command.MEASURE);
 
-    this.sendCommand(robotTopic, Command.GET_COORDINATES);
+    this.sendCommand(TopicEnums.RobotTopic, Command.GET_COORDINATES);
     let msgCount = 0;
     let distances = {};
     let currentPoint = {};
 
-    this.client.on("message", (topic: string, payload: { toString: () => any; }) => {
+    this.client.on("message", (topic: string, payload: any) => {
       const msg = payload.toString();
       msgCount++;
 
       const valObj = this.sensorStrToObj(msg);
 
-      if(topic === usTopic+"/out")
+      if(topic === TopicEnums.UsSensorTopic+"/out")
         distances = Object.assign(distances, valObj);
       else
         currentPoint = Object.assign(currentPoint, valObj);
@@ -67,7 +64,7 @@ export class ControlCarApi2 {
           this.client.unsubscribe(topics[i] + "/out");
 
         // @ts-ignore
-        const xYObj = this.convertToXYForm(parseInt(distances["DISTANCE_FRONT"]), parseInt(distances["DISTANCE_LEFT"]), parseInt(distances["DISTANCE_RIGHT"]), 300, 600, CurrentDirection.FORWARD);
+        const xYObj = this.convertToXYForm(parseInt(distances["DISTANCE_FRONT"]), parseInt(distances["DISTANCE_LEFT"]), parseInt(distances["DISTANCE_RIGHT"]));
         currentPoint = Object.assign(currentPoint, xYObj);
 
         // @ts-ignore
@@ -118,18 +115,13 @@ export class ControlCarApi2 {
     this.client.publish(topic, commandStr);
   }
 
-  convertToXYForm(frontDistance: number, leftDistance: any, rightDistance: any, width: number, height: number, currentDirection: any){
-    const coords: {
-      x:number,
-      y:number
-    } = {
-      x: 0,
-      y: 0
+   convertToXYForm(frontDistance: number, leftDistance: number, rightDistance: number){
+    const coords:any = {
     };
-    switch (currentDirection) {
+    switch (this.currentDirection) {
       case CurrentDirection.FORWARD:
         coords.x = leftDistance;
-        coords.y = height-frontDistance;
+        coords.y = this.height - frontDistance;
         break;
 
       case CurrentDirection.LEFT:
@@ -143,14 +135,15 @@ export class ControlCarApi2 {
         break;
 
       case CurrentDirection.RIGHT:
-        coords.x = width-frontDistance;
+        coords.x = this.width-frontDistance;
         coords.y = rightDistance;
         break;
     }
+
     return coords;
   }
 
-  sensorStrToObj(str: string | any[]){
+  sensorStrToObj(str:any){
     const obj = {};
     let currentKey = '';
     for(let i=0; i<str.length; i++){
@@ -162,7 +155,7 @@ export class ControlCarApi2 {
             // @ts-ignore
             currentKey = parseInt(currentKey);
             // @ts-ignore
-            currentKey = convertIntToStrSensorEnum(currentKey);
+            currentKey = this.convertIntToStrSensorEnum(currentKey);
             // @ts-ignore
             obj[currentKey] = currentValue;
             currentKey = '';
@@ -177,7 +170,7 @@ export class ControlCarApi2 {
     return obj;
   }
 
-  convertIntToStrSensorEnum(intVal: any) {
+   convertIntToStrSensorEnum(intVal: any) {
     switch (intVal) {
       case SensorValue.TEMPERATURE:
         return "temperature";
