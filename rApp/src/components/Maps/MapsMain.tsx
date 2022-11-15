@@ -28,15 +28,20 @@ const MapsMain = () => {
 
   useEffect(()=>{
     const fetchData = async ()=>{
-      const data = await dataBaseApi.getAllMaps();
-
-      if(data){
-        setMaps(data.result)
+      try {
+        const data = await dataBaseApi.getAllMaps();
+        if(data){
+          setMaps(data.result)
+        }
+        else{alert('some error with fetch maps')}
+      }
+      catch (e){
+      alert(e)
       }
     }
-    fetchData().catch(
-      console.error
-    );
+    fetchData().catch(e=>{
+      alert(e)
+    });
   },[])
 
 const [handleFetch, setHandleFetch] = useState(false);
