@@ -4,7 +4,7 @@ import { CurrentDirection } from "./CurrentDirection.js";
 const client = mqtt.connect('ws://192.168.50.91:8883');
 
 const robotTopic = "1/0";
-const usSensorTopic = "1/1";
+const usTopic = "1/1";
 
 const forwardButton = document.querySelector("#forwardButton");
 const leftButton = document.querySelector("#leftButton");
@@ -13,38 +13,118 @@ const rightButton = document.querySelector("#rightButton");
 const turnLeftButton = document.querySelector("#turnLeftButton");
 const turnRightButton = document.querySelector("#turnRightButton");
 const measureCoordinatesButton = document.querySelector("#measureCoordinatesButton");
+const startStopMeasurementButton = document.querySelector("#startStopMeasurementButton");
 
-const points = [];
+let currentDirection = CurrentDirection.FORWARD;
+let isMeasurementStarted = false;
+let width, height;
 
-let moveForwardIntervalId, moveBackIntervalId, turnLeftIntervalId, turnRightIntervalId;
+let points = [];
+
+let turnLeftIntervalId, turnRightIntervalId;
 
 forwardButton.addEventListener("mousedown", (e) => {
-    moveForwardIntervalId = setInterval(moveForward, 10);
+    switch (currentDirection) {
+        case CurrentDirection.FORWARD:
+            break;
+        case CurrentDirection.LEFT:
+            turnRight();
+            break;
+        case CurrentDirection.RIGHT:
+            turnLeft();
+            break;
+        case CurrentDirection.BACK:
+            turnLeft();
+            turnLeft();
+            break;
+    }
+
+    currentDirection = CurrentDirection.FORWARD;
+    moveForward();
 });
 
 forwardButton.addEventListener("mouseup", (e) => {
-    stopMoving(moveForwardIntervalId);
+    stopMoving();
 });
 
-leftButton.addEventListener("click", (e) => {
-    turnLeft();
+leftButton.addEventListener("mousedown", (e) => {
+    switch (currentDirection) {
+        case CurrentDirection.FORWARD:
+            turnLeft();
+            break;
+        case CurrentDirection.LEFT:
+            break;
+        case CurrentDirection.RIGHT:
+            turnRight();
+            turnRight();
+            break;
+        case CurrentDirection.BACK:
+            turnRight();
+            break;
+    }
+
+    currentDirection = CurrentDirection.LEFT;
+    moveForward();
+});
+
+leftButton.addEventListener("mouseup", (e) => {
+    stopMoving();
 });
 
 backButton.addEventListener("mousedown", (e) => {
-    moveBackIntervalId = setInterval(moveBack, 10);
+    switch (currentDirection) {
+        case CurrentDirection.FORWARD:
+            turnLeft();
+            turnLeft();
+            break;
+        case CurrentDirection.LEFT:
+            turnLeft();
+            break;
+        case CurrentDirection.RIGHT:
+            turnRight();
+            break;
+        case CurrentDirection.BACK:
+            break;
+    }
+
+    currentDirection = CurrentDirection.BACK;
+    moveForward();
 });
 
 backButton.addEventListener("mouseup", (e) => {
-    stopMoving(moveBackIntervalId);
+    stopMoving();
 });
 
-rightButton.addEventListener("click", (e) => {
-    turnRight();
+rightButton.addEventListener("mousedown", (e) => {
+    switch (currentDirection) {
+        case CurrentDirection.FORWARD:
+            turnRight();
+            break;
+        case CurrentDirection.LEFT:
+            turnRight();
+            turnRight();
+            break;
+        case CurrentDirection.RIGHT:
+            break;
+        case CurrentDirection.BACK:
+            turnLeft();
+            break;
+    }
+
+    currentDirection = CurrentDirection.RIGHT;
+    moveForward();
 });
+
+rightButton.addEventListener("mouseup", (e) => {
+    stopMoving();
+});
+
 
 measureCoordinatesButton.addEventListener("click", (e) => {
     measureCoordinates();
 });
+
+
 
 turnLeftButton.addEventListener("mousedown", (e) => {
     turnLeftIntervalId = setInterval(turnLeftMS, 10);
@@ -62,14 +142,42 @@ turnRightButton.addEventListener("mouseup", (e) => {
     stopMoving(turnRightIntervalId);
 });
 
-function moveForward() {
-    const durationMs = 10;
-    sendCommand(robotTopic, Command.MOVE_FORWARD, durationMs);
-}
+startStopMeasurementButton.addEventListener("click", ()=>{
+    if(!isMeasurementStarted){
+        startStopMeasurementButton.textContent = "STOP";
+        isMeasurementStarted = true;
 
-function moveBack() {
-    const durationMs = 10;
-    sendCommand(robotTopic, Command.MOVE_BACK, durationMs);
+        client.subscribe(usTopic + "/out");
+        sendCommand(robotTopic, Command.GET_COORDINATES);
+
+        let distances = {};
+        let msgCount = 0;
+
+        client.on("message", function (topic, payload) {
+            const msg = payload.toString();
+            msgCount++;
+            const valObj = sensorStrToObj(msg);
+            distances = Object.assign(distances, valObj);
+
+            if(msgCount === 3){
+                client.unsubscribe(usTopic + "/out");
+                width = parseInt(distances["DISTANCE_LEFT"]) + parseInt(distances["DISTANCE_RIGHT"]);
+                height = parseInt(distances["DISTANCE_FRONT"]);
+            }
+        });
+
+        currentDirection = CurrentDirection.FORWARD;
+    } else {
+        startStopMeasurementButton.textContent = "START";
+        isMeasurementStarted = false;
+
+        console.log(points);
+        points = [];
+    }
+});
+
+function moveForward() {
+    sendCommand(robotTopic, Command.MOVE_FORWARD);
 }
 
 function turnLeft() {
@@ -130,7 +238,7 @@ function measureCoordinates() {
             for(let i=1; i<topics.length; i++)
                 client.unsubscribe(topics[i] + "/out");
 
-            const xYObj = convertToXYForm(parseInt(distances["DISTANCE_FRONT"]), parseInt(distances["DISTANCE_LEFT"]), parseInt(distances["DISTANCE_RIGHT"]), 300, 600, CurrentDirection.FORWARD);
+            const xYObj = convertToXYForm(parseInt(distances["DISTANCE_FRONT"]), parseInt(distances["DISTANCE_LEFT"]), parseInt(distances["DISTANCE_RIGHT"]));
             currentPoint = Object.assign(currentPoint, xYObj);
 
             points.push(currentPoint);
@@ -149,7 +257,7 @@ function sendCommand(topic, command, param) {
     client.publish(topic, commandStr);
 }
 
-function convertToXYForm(frontDistance, leftDistance, rightDistance, width, height, currentDirection){
+function convertToXYForm(frontDistance, leftDistance, rightDistance){
     const coords = {};
     switch (currentDirection) {
         case CurrentDirection.FORWARD:
