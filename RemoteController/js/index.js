@@ -14,9 +14,7 @@ const turnLeftButton = document.querySelector("#turnLeftButton");
 const turnRightButton = document.querySelector("#turnRightButton");
 const measureCoordinatesButton = document.querySelector("#measureCoordinatesButton");
 
-const saveToFileButton = document.querySelector("#saveToFileButton");
-
-let coordinatesArray = [];
+const points = [];
 
 let moveForwardIntervalId, moveBackIntervalId, turnLeftIntervalId, turnRightIntervalId;
 
@@ -64,21 +62,6 @@ turnRightButton.addEventListener("mouseup", (e) => {
     stopMoving(turnRightIntervalId);
 });
 
-saveToFileButton.addEventListener("click", async (e) => {
-    const file = new Blob([JSON.stringify(coordinatesArray)], {type: "application/json"});
-
-    const fileHandle = await window.showSaveFilePicker({
-        types: [{
-            description: "JSON file",
-            accept: {"application/json": [".json"]}
-        }]
-    });
-    const fileStream = await fileHandle.createWritable();
-
-    await fileStream.write(file);
-    await fileStream.close();
-});
-
 function moveForward() {
     const durationMs = 10;
     sendCommand(robotTopic, Command.MOVE_FORWARD, durationMs);
@@ -113,25 +96,46 @@ function stopMoving(intervalId){
 }
 
 function measureCoordinates() {
-    client.subscribe(usSensorTopic + "/out");
+    const robotTopic = "1/0";
+    const usTopic = "1/1";
+    const dhtTopic = "1/2";
+    const tiltTopic = "1/3";
+    const photoTopic = "1/4";
+
+    const topics = [ robotTopic, usTopic, dhtTopic, tiltTopic, photoTopic ];
+    for(let i=1; i<topics.length; i++)
+        client.subscribe(topics[i] + "/out");
+
+    for(let i=2; i<topics.length; i++)
+        sendCommand(topics[i], Command.MEASURE);
+
     sendCommand(robotTopic, Command.GET_COORDINATES);
     let msgCount = 0;
-
-    const messages = [];
+    let distances = {};
+    let currentPoint = {};
 
     client.on("message", function (topic, payload) {
         const msg = payload.toString();
-        messages.push(msg);
         msgCount++;
-        console.log("msg came");
-        if(msgCount === 3){
-            client.unsubscribe(usSensorTopic);
-            const coordinates = generateCoordsArr(messages);
-            coordinatesArray.push(coordinates);
 
-            const xYObj = convertToXYForm(coordinates[0], coordinates[1], coordinates[2], 60, 100, CurrentDirection.BACK);
-            console.log("measured");
-            console.log(xYObj);
+        const valObj = sensorStrToObj(msg);
+
+        if(topic === usTopic+"/out")
+            distances = Object.assign(distances, valObj);
+        else
+            currentPoint = Object.assign(currentPoint, valObj);
+
+
+        if(msgCount === 6){
+            for(let i=1; i<topics.length; i++)
+                client.unsubscribe(topics[i] + "/out");
+
+            const xYObj = convertToXYForm(parseInt(distances["DISTANCE_FRONT"]), parseInt(distances["DISTANCE_LEFT"]), parseInt(distances["DISTANCE_RIGHT"]), 300, 600, CurrentDirection.FORWARD);
+            currentPoint = Object.assign(currentPoint, xYObj);
+
+            points.push(currentPoint);
+            currentPoint = {};
+            console.log(points);
         }
     });
 }
@@ -143,43 +147,6 @@ function sendCommand(topic, command, param) {
     commandStr += ";";
 
     client.publish(topic, commandStr);
-}
-
-function generateCoordsArr(msgArr) {
-    const result = [];
-    for(let i=0; i<msgArr.length; i++){
-        const currentMsg = msgArr[i];
-
-        // find indexes of : and ; in the message string (from US sensor)
-        let colonIndex, semicolonIndex;
-        for(let j=0; j<currentMsg.length; j++){
-            if(currentMsg.charAt(j) === ":")
-                colonIndex = j;
-            if(currentMsg.charAt(j) === ";")
-                semicolonIndex = j;
-        }
-
-        //get direction (DISTANCE_FRONT, DISTANCE_LEFT, DISTANCE_RIGHT) of distance and distance itself from the message string
-        const sensorValueStr = currentMsg.slice(0, colonIndex);
-        const valueStr = currentMsg.slice(colonIndex+1, semicolonIndex);
-        const sensorValue = parseInt(sensorValueStr);
-        const value = parseInt(valueStr);
-
-        //put distances (=coordinates) to the result arr in the form [FRONT, LEFT, RIGHT]
-        switch (sensorValue) {
-            case SensorValue.DISTANCE_FRONT:
-                result[0] = value;
-                break;
-            case SensorValue.DISTANCE_LEFT:
-                result[1] = value;
-                break;
-            case SensorValue.DISTANCE_RIGHT:
-                result[2] = value;
-                break;
-        }
-    }
-
-    return result;
 }
 
 function convertToXYForm(frontDistance, leftDistance, rightDistance, width, height, currentDirection){
@@ -207,4 +174,47 @@ function convertToXYForm(frontDistance, leftDistance, rightDistance, width, heig
     }
 
     return coords;
+}
+
+function sensorStrToObj(str){
+    const obj = {};
+    let currentKey = '';
+    for(let i=0; i<str.length; i++){
+        if(str[i] === ':'){
+            i++;
+            let currentValue = '';
+            for(;i<str.length; i++){
+                if(str[i] === ',' || i === str.length-1){
+                    currentKey = parseInt(currentKey);
+                    currentKey = convertIntToStrSensorEnum(currentKey);
+                    obj[currentKey] = currentValue;
+                    currentKey = '';
+                    break;
+                } else
+                    currentValue += str[i];
+            }
+        } else
+            currentKey += str[i];
+    }
+
+    return obj;
+}
+
+function convertIntToStrSensorEnum(intVal) {
+    switch (intVal) {
+        case SensorValue.TEMPERATURE:
+            return "temperature";
+        case SensorValue.HUMIDITY:
+            return "humidity";
+        case SensorValue.LIGHT_INTENSITY:
+            return "lightIntensity";
+        case SensorValue.IS_TILTED:
+            return "isTilted";
+        case SensorValue.DISTANCE_FRONT:
+            return "DISTANCE_FRONT";
+        case SensorValue.DISTANCE_LEFT:
+            return "DISTANCE_LEFT";
+        case SensorValue.DISTANCE_RIGHT:
+            return "DISTANCE_RIGHT";
+    }
 }
