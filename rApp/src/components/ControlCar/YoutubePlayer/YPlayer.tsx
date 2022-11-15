@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect, useLayoutEffect, useMemo, useState} from 'react';
+import ReactPlayer from "react-player";
 
 interface YPLayerProps{
   youtubeLink?: string
@@ -6,9 +7,7 @@ interface YPLayerProps{
 
 const YPlayer = ({youtubeLink}:YPLayerProps) => {
   return (
-    <div>
-      {youtubeLink}
-    </div>
+    <ReactPlayer url={youtubeLink} />
   );
 };
 
