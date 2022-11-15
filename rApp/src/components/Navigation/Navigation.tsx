@@ -7,7 +7,7 @@ export const Navigation = () => {
   return (
     <>
     <nav className={'d-flex gap-2 mt-2'}>
-      <Button onClick={()=> navigate('/')}>Home</Button>
+      {/*<Button onClick={()=> navigate('/')}>Home</Button>*/}
       <Button onClick={()=> navigate('controlCar')}>Car control</Button>
       <Button onClick={()=> navigate('/maps')}>Maps</Button>
     </nav>

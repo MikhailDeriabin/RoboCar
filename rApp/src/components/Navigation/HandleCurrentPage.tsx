@@ -20,7 +20,8 @@ const HandleCurrentPage = () => {
   return (
     <>
       <h2 className={'mt-2 d-flex'}> 👉️
-        <span style={{'cursor': "pointer"}} onClick={()=>navigate('/')}>home</span>
+        {/*<span style={{'cursor': "pointer"}} onClick={()=>navigate('/')}>Home</span>*/}
+        <span style={{'cursor': "pointer"}} onClick={()=>navigate('/')}></span>
         <span >{location.pathname}</span>
         { location.pathname !=='/' && <div style={{marginLeft: '10px'}}><GoBackButton/></div>}
       </h2>
