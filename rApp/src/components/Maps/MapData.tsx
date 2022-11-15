@@ -4,6 +4,7 @@ import {DataBaseApi} from "../../api/DataBaseApi";
 import {IMapDataGetOne} from "../../types/types";
 import Canvas from "../Canvas/Canvas";
 import {MockMaps} from "../../../mocks/MockMaps";
+import {convertStringToDate} from "../../utils/convertStringToDate";
 
 const MapData = () => {
   const params = useParams();
@@ -13,28 +14,36 @@ const MapData = () => {
   const mockMaps = MockMaps;
 
 
-
   const [mapData,setMapData] = useState<IMapDataGetOne>()
 
+  const dataBaseApi = new DataBaseApi();
 
   useEffect(  () => {
-    // const dataBaseApi = new DataBaseApi();
-
     if (MapDataId) {
-      const foundMap = mockMaps.find(value => value.id === Number(MapDataId) )
+      // const foundMap = mockMaps.find(value => value.id === Number(MapDataId) )
+      //
+      // // @ts-ignore
+      // setMapData(foundMap);
+      // let person = prompt("Please enter your name", "Harry Potter");
 
-      // @ts-ignore
-      setMapData(foundMap);
 
-      // const fetchData = async () => {
-      //   const data = await dataBaseApi.getMapById(Number(MapDataId));
-      //   if(data){
-      //     setMapData(data)
-      //   }
-      // }
-      // fetchData().catch(
-      //   console.error
-      // );
+
+      const fetchData = async () => {
+        const data = await dataBaseApi.getMapById(Number(MapDataId));
+        const dataResult: IMapDataGetOne = data?.result
+
+        if(dataResult){
+          const creationDate = convertStringToDate(dataResult.creationDate);
+
+          // console.log(creationDate);
+
+          dataResult.creationDate = creationDate;
+          setMapData(dataResult)
+        }
+      }
+      fetchData().catch(
+        console.error
+      );
     }
   },[])
 
@@ -47,7 +56,7 @@ const MapData = () => {
     );
   }
     return(
-      <div>some error with fetch</div>
+      <div></div>
     )
 };
 

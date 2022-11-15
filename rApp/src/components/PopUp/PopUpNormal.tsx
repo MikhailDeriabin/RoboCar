@@ -79,7 +79,7 @@ const PopUpNormal = ({ObjectToShowId,canvas,circlesGlobal,coords,objectToShow={
       <h4>{'Title'} <span onClick={(()=> setIsShow(!isShow))}>X</span></h4>
       <ul>
         {Object.entries(objectToShow).map(([key,value])=>(
-          <li key={nanoid()}>{key} : {value.toString()}</li>
+          <li key={nanoid()}>{key} : {value?.toString()}</li>
         ))}
       </ul>
       </div>
