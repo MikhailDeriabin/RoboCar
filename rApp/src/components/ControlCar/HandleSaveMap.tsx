@@ -3,7 +3,6 @@ import {Button} from "react-bootstrap";
 import Prompt from "../UI/Prompt/Prompt";
 import {DataBaseApi} from "../../api/DataBaseApi";
 import {IMapDataPostWithName, IMapDataPostWithoutName} from "../../types/types";
-import {error} from "electron-log";
 const dataBaseApi = new DataBaseApi();
 
 interface HandleSaveMapProps{
@@ -25,9 +24,14 @@ const HandleSaveMap = ({sendableObject,setSendableObject,isPromptOpen,setIsPromp
   const handleFetch = async ()=>{
     if(sendableObjectWithName!=null){
       try{
-        await dataBaseApi.createNewMap(sendableObjectWithName);
-        setSendableObject(null);
-        setSendableObjectWithName(null);
+        const result = await dataBaseApi.createNewMap(sendableObjectWithName);
+        if(result.isSuccess){
+          setSendableObject(null);
+          setSendableObjectWithName(null);
+        }
+        else{
+          setFetchError('some error with fetch')
+        }
       }
       catch (e:any){
         setFetchError(e)
