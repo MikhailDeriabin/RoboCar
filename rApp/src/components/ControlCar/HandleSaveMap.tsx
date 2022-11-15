@@ -9,11 +9,13 @@ const dataBaseApi = new DataBaseApi();
 interface HandleSaveMapProps{
   sendableObject: IMapDataPostWithoutName | null,
   setSendableObject:  React.Dispatch<React.SetStateAction<IMapDataPostWithoutName| null>>
+  isPromptOpen: boolean,
+  setIsPromptOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const HandleSaveMap = ({sendableObject,setSendableObject}:HandleSaveMapProps) => {
+const HandleSaveMap = ({sendableObject,setSendableObject,isPromptOpen,setIsPromptOpen}:HandleSaveMapProps) => {
 
-  const [isPromptOpen, setIsPromptOpen] = useState(false)
+  // const [isPromptOpen, setIsPromptOpen] = useState(false);
   const [mapName, setMapName] = useState('');
 
   const [fetchError,setFetchError] = useState('')
