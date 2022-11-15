@@ -13,6 +13,7 @@ const ControlCarMain = () => {
 
   const [videoLink,setVideoLink] = useState<string>('');
 
+
   useEffect(() => {
     setVideoLink(savedChannel.channel)
 
@@ -24,9 +25,9 @@ const ControlCarMain = () => {
 
       <VForm setVideoLink={setVideoLink}/>
 
-     <div className=''>
-       <VPlayer videoLink={videoLink}/>
-     </div>
+      {videoLink.length>0 &&
+      <VPlayer videoLink={videoLink}/>
+      }
 
       <div className='mb-3'>
       <RemoteController/>
