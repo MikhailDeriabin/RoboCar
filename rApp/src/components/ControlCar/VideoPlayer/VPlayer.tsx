@@ -2,13 +2,13 @@ import React, {useEffect, useLayoutEffect, useMemo, useState} from 'react';
 import ReactPlayer from "react-player";
 
 interface YPLayerProps{
-  youtubeLink?: string
+  videoLink?: string
 }
 
-const YPlayer = ({youtubeLink}:YPLayerProps) => {
+const VPlayer = ({videoLink}:YPLayerProps) => {
   return (
-    <ReactPlayer url={youtubeLink} />
+    <ReactPlayer url={videoLink} />
   );
 };
 
-export default YPlayer;
+export default VPlayer;

@@ -1,30 +1,34 @@
 import React, {useEffect, useState} from 'react';
 import RemoteController from "./remoteController/RemoteController";
-import YPlayer from "./YoutubePlayer/YPlayer";
-import YForm from "./YoutubePlayer/YForm";
-import {SavedChannel} from "./YoutubePlayer/SavedChannel";
+import VPlayer from "./VideoPlayer/VPlayer";
+import VForm from "./VideoPlayer/VForm";
+import {SavedChannel} from "./VideoPlayer/SavedChannel";
+import {inspect} from "util";
+import styles from './ControlCar.module.scss'
 
 
 const ControlCarMain = () => {
 
   const savedChannel = SavedChannel.getInstance();
 
-  const [youtubeLink,setYoutubeLink] = useState<string>('');
+  const [videoLink,setVideoLink] = useState<string>('');
 
   useEffect(() => {
-    setYoutubeLink(savedChannel.channel)
+    setVideoLink(savedChannel.channel)
 
-  }, [youtubeLink]);
+  }, [videoLink]);
 
   return (
-    <div style={{height:'100%',marginTop:'50px'}} className={'d-flex  flex-column align-items-center '}>
+    <div style={{height:'100%',marginTop:'30px'}} className={'d-flex justify-content-center gap-4 text-center align-items-center flex-column'}>
+    {/*// <div style={{height:'100%',marginTop:'30px'}} className={'' + '' + styles.gridContainer}>*/}
 
-     <div className='mt-1'>
-       <YForm  setYoutubeLink={setYoutubeLink}/>
-       <YPlayer youtubeLink={youtubeLink}/>
+      <VForm setVideoLink={setVideoLink}/>
+
+     <div className=''>
+       <VPlayer videoLink={videoLink}/>
      </div>
 
-      <div className='mt-5'>
+      <div className='mb-3'>
       <RemoteController/>
       </div>
 

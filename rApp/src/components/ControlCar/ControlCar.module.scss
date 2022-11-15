@@ -1,0 +1,7 @@
+.gridContainer{
+  text-align: center;
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(68rem, 1fr));
+  grid-gap:2rem;
+  justify-items: center;
+}
