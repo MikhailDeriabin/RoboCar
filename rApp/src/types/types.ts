@@ -14,12 +14,31 @@ export interface CoordsDistanceObject {
   distanceLeft : number,
 }
 
-export interface IMapData {
+interface IMapDataBase{
   name: string,
   width: number,
   height: number,
+}
+interface IMapDataGetFromApi extends IMapDataBase{
+  id:number,
+  date: Date
+}
+
+interface IMapDataWithPoints extends IMapDataBase{
   points: IPointsInfo[]
 }
+
+export interface IMapDataPost extends IMapDataWithPoints{}
+
+export interface IMapDataGetWithoutPoints extends IMapDataGetFromApi{}
+
+export interface IMapDataGetOne extends IMapDataGetFromApi,IMapDataWithPoints{}
+
+
+
+
+
+
 //
 // export interface Imap{
 //
