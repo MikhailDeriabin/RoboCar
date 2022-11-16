@@ -1,5 +1,5 @@
-import {apiPath, controlCarPath} from "../data/paths";
-import {IMapDataGetOne, IMapDataPostWithName} from "../types/types";
+import {apiPath} from "../data/paths";
+import {IMapDataPost} from "../types/types";
 
 
 export class DataBaseApi {
@@ -13,7 +13,7 @@ export class DataBaseApi {
   }
 
 
-  createNewMap = async (reqData: IMapDataPostWithName) => {
+  createNewMap = async (reqData: IMapDataPost) => {
     const reqOptions = {
       headers:{
         'Content-Type': 'application/json'
