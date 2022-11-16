@@ -2,7 +2,7 @@
 import mqtt from "precompiled-mqtt";
 import {Command} from "./CommandEnums";
 import {TopicEnums} from "./TopicEnums";
-import {CoordsDistanceObject, IMapDataPostWithName, IMapDataPostWithoutName} from "../types/types";
+import {IMapDataPost} from "../types/types";
 import {SensorValue} from "./SensorsValuesEnums";
 import {controlCarPath} from "../data/paths";
 import {CurrentDirection} from "./CurrentDirectionEnums";
@@ -16,20 +16,24 @@ export class ControlCarApi2 {
   private readonly client: any;
 
   public points = [];
-  private reqDataWithoutName: IMapDataPostWithoutName | null = null;
+
 
   public currentDirection:CurrentDirection = CurrentDirection.FORWARD;
   public isMeasurementStarted = false;
-  public readyToBeSent = false;
 
-  public mapName: string|null = null;
+  public mapName: string = '';
   private width: number = 0;
   private height: number = 0;
   private robotLong: number = 25;
 
-  // private coordinatesArray: CoordsDistanceObject[] = [];
+  private reqData: IMapDataPost = {
+    name: this.mapName,
+    height: this.height,
+    width: this.width,
+    points: this.points
+  };
 
-  // doneObject : any;
+
 
   private constructor() {
 
@@ -88,14 +92,20 @@ export class ControlCarApi2 {
   }
 
   async saveMeasureResult(){
-    let reqDataWithName: IMapDataPostWithName;
-    if(this.reqDataWithoutName){
+    console.log(this.reqData);
+
+    let reqDataWithName: IMapDataPost;
+    if(this.reqData){
       if(this.mapName){
         reqDataWithName = {
-          ...this.reqDataWithoutName,
-          name: this.mapName
+          ...this.reqData,
+          name: this.mapName,
+          height: this.height,
+          width: this.width,
+          points: this.points
         }
         try {
+          console.log("here",reqDataWithName);
           const result = await this.dataBaseApi.createNewMap(reqDataWithName);
           console.log(result)
         }
@@ -107,7 +117,7 @@ export class ControlCarApi2 {
 
     else{
       // alert('problems with db api')
-      console.log('reqDataWithoutName is empty')
+      console.log('reqData is empty')
     }
 
   }
@@ -145,11 +155,11 @@ export class ControlCarApi2 {
       this.isMeasurementStarted = false;
 
       console.log(this.points);
-      console.log(this.width,this.height);
+      console.log("width",this.width, 'height',this.height);
 
       this.points = [];
-      this.mapName = null;
-      this.reqDataWithoutName = null;
+      this.mapName = '';
+      // this.reqData = null;
     }
   }
 

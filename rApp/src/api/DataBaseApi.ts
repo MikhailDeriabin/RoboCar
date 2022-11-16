@@ -18,7 +18,7 @@ export class DataBaseApi {
       headers:{
         'Content-Type': 'application/json'
       },
-      method: 'GET',
+      method: 'POST',
       credentials: 'include',
       body: JSON.stringify({...reqData})
     }

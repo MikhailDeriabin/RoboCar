@@ -34,7 +34,7 @@ interface IMapDataWithPoints extends IMapDataBase{
 
 export interface IMapDataPostWithoutName extends IMapDataWithPoints{}
 
-export interface IMapDataPostWithName extends IMapDataWithPoints,IMapDataWithName{}
+export interface IMapDataPost extends IMapDataWithPoints,IMapDataWithName{}
 
 export interface IMapDataGetWithoutPoints extends IMapDataGetFromApi{}
 

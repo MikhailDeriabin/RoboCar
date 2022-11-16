@@ -159,8 +159,6 @@ const RemoteController = () => {
   }
   const eventLInstance = eventLogic();
 
-
-  // const handleClick = (event:any) => {
   const handleClick = useCallback((event:any) => {
       switch (event.key){
         case 'm':
@@ -207,13 +205,21 @@ const RemoteController = () => {
 
 
   useEffect(() => {
-    window.addEventListener("keydown", handleClick);
-    window.addEventListener("keyup",  eventLInstance.setDefault);
+
+    if(!isShowPrompt){
+      window.addEventListener("keydown", handleClick);
+      window.addEventListener("keyup",  eventLInstance.setDefault);
+    }
+    if(isShowPrompt){
+      window.removeEventListener("keydown", handleClick);
+      window.removeEventListener("keyup",  eventLInstance.setDefault);
+    }
+
     return () => {
       window.removeEventListener("keydown", handleClick);
       window.removeEventListener("keyup",  eventLInstance.setDefault);
     };
-  }, []);
+  }, [isShowPrompt]);
 
   useEffect(()=>{
     setIsMeasurementStarted(controlCarApi2.isMeasurementStarted);
