@@ -9,7 +9,7 @@ class MQTTClient{
         static MQTTClient* instance;
         PubSubClient* pubSubClient;
         int id; 
-        const char* mqtt_server = "192.168.50.93";
+        const char* mqtt_server = "your IP";
         const int mqtt_port = 1884;
         MQTTClient(int id){
             this->id = id; 
