@@ -10,17 +10,6 @@ interface PromptProps{
   fetchCallBack?:any
 }
 
-// prompt custom, example:
-// const [isPromptOpen, setIsPromptOpen] = useState(false)
-// const [mapName, setMapName] = useState('');
-//
-// //jsx
-//
-// <button onClick={()=>setIsPromptOpen(true)}>test</button>
-// <Prompt promptName='Map name' isShow={isPromptOpen} setIsShow={setIsPromptOpen} setValue={setMapName}/>
-// {mapName}
-
-
 const Prompt = ({promptName,isShow,setIsShow,setValue}:PromptProps) => {
 
   const [inputValue,setInputValue] = useState('');
