@@ -5,11 +5,8 @@ import GoIcon from "../../UI/GoIcon";
 import {ControlCarApi2} from "../../../api/ControlCarApi2";
 import {CurrentDirection} from "../../../api/CurrentDirectionEnums";
 import Prompt from "../../UI/Prompt/Prompt";
-import {DataBaseApi} from "../../../api/DataBaseApi";
-import useUpdateEffect from "../../../hooks/useUpdateEffect";
 
 
-// const controlCarApi = ControlCarApi.getInstance();
 const controlCarApi2 = ControlCarApi2.getInstance();
 
 const RemoteController = () => {
@@ -226,7 +223,9 @@ const RemoteController = () => {
   },[eventLInstance.centerRightStartStopMeasure]);
 
   useEffect(()=>{
-    controlCarApi2.mapName = mapName;
+    if(mapName){
+      controlCarApi2.mapName = mapName;
+    }
   },[isShowPrompt])
 
   return (
