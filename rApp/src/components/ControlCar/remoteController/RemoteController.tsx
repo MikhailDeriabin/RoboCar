@@ -2,14 +2,18 @@ import React, {useCallback, useEffect, useState} from 'react';
 import styles from './RemoteController.module.scss';
 import classnames from "classnames";
 import GoIcon from "../../UI/GoIcon";
-import {ControlCarApi} from "../../../api/ControlCarApi";
 import {ControlCarApi2} from "../../../api/ControlCarApi2";
+import {CurrentDirection} from "../../../api/CurrentDirectionEnums";
+import Prompt from "../../UI/Prompt/Prompt";
+import {DataBaseApi} from "../../../api/DataBaseApi";
+import useUpdateEffect from "../../../hooks/useUpdateEffect";
 
 
-const controlCarApi = ControlCarApi.getInstance();
+// const controlCarApi = ControlCarApi.getInstance();
 const controlCarApi2 = ControlCarApi2.getInstance();
 
 const RemoteController = () => {
+
 
   const defaultIsActive = {
     centerLeft: false,
@@ -22,70 +26,132 @@ const RemoteController = () => {
     topRight: false
   }
 
-  // console.log('rerender test')
-
-  //
-  const [isActive, setIsActive] = useState(defaultIsActive);
 
   //for css only
+  const [isActive, setIsActive] = useState(defaultIsActive);
   const [isParentActive, setIsParentActive] = useState<boolean>(false);
 
+  const [isShowPrompt,setIsShowPrompt] = useState(true);
+  const [mapName,setMapName] = useState<string|null>(null);
+
+  const [isMeasurementStarted,setIsMeasurementStarted] = useState(controlCarApi2.isMeasurementStarted);
 
   const eventLogic = () => {
-    // let moveForwardIntervalId: any, moveBackIntervalId:any, turnLeftIntervalId:any, turnRightIntervalId:any;
   return {
     'centerLeftMeasure': function (){
-      // controlCarApi.measureTempHumid();
-      // controlCarApi.measureLightIntensity();
-      // controlCarApi.measureIsTilted();
-      // controlCarApi.measureCoordinates();
-      controlCarApi2.measureCoordinates();
-
-
+      controlCarApi2.measure();
       setIsActive({...isActive , centerLeft: !isActive.centerLeft });
       setIsParentActive(true);
     },
-    'centerRightSendMap': function (){
+
+    'centerRightStartStopMeasure': function (){
+      controlCarApi2.startStopMeasurementHandler();
       setIsActive({...isActive , centerRight: !isActive.centerRight });
       setIsParentActive(true);
     },
+
     'goForward': function (){
-      // moveForwardIntervalId = setInterval(controlCarApi.moveForward,10);
-      controlCarApi.moveForward();
+      switch (controlCarApi2.currentDirection) {
+        case CurrentDirection.FORWARD:
+          break;
+        case CurrentDirection.LEFT:
+          controlCarApi2.turnRight();
+          break;
+        case CurrentDirection.RIGHT:
+          controlCarApi2.turnLeft();
+          break;
+        case CurrentDirection.BACK:
+          controlCarApi2.turnLeft();
+          controlCarApi2.turnLeft();
+          break;
+      }
+
+      controlCarApi2.currentDirection = CurrentDirection.FORWARD;
+      controlCarApi2.moveForward();
+
       setIsActive({...isActive , top: !isActive.top });
       setIsParentActive(true);
     },
-    'turnRight90deg': function (){
-      controlCarApi.turnRight();
+    'goRight': function (){
+
+      switch (controlCarApi2.currentDirection) {
+        case CurrentDirection.FORWARD:
+          controlCarApi2.turnRight();
+          break;
+        case CurrentDirection.LEFT:
+          controlCarApi2.turnRight();
+          controlCarApi2.turnRight();
+          break;
+        case CurrentDirection.RIGHT:
+          break;
+        case CurrentDirection.BACK:
+          controlCarApi2.turnLeft();
+          break;
+      }
+
+      controlCarApi2.currentDirection = CurrentDirection.RIGHT;
+      controlCarApi2.moveForward();
       setIsActive({...isActive , right: !isActive.right });
       setIsParentActive(true);
     },
     'goBack': function (){
-      // moveForwardIntervalId = setInterval(controlCarApi.moveBack,10);
-      controlCarApi.moveBack();
+
+      switch (controlCarApi2.currentDirection) {
+        case CurrentDirection.FORWARD:
+          controlCarApi2.turnLeft();
+          controlCarApi2.turnLeft();
+          break;
+        case CurrentDirection.LEFT:
+          controlCarApi2.turnLeft();
+          break;
+        case CurrentDirection.RIGHT:
+          controlCarApi2.turnRight();
+          break;
+        case CurrentDirection.BACK:
+          break;
+      }
+      controlCarApi2.currentDirection = CurrentDirection.BACK;
+      controlCarApi2.moveForward();
+
       setIsActive({...isActive , bottom: !isActive.bottom });
       setIsParentActive(true);
     },
-    'turnLeft90Deg': function (){
-      controlCarApi.turnLeft();
+    'goLeft': function (){
+      switch (controlCarApi2.currentDirection) {
+        case CurrentDirection.FORWARD:
+          controlCarApi2.turnLeft();
+          break;
+        case CurrentDirection.LEFT:
+          break;
+        case CurrentDirection.RIGHT:
+          controlCarApi2.turnRight();
+          controlCarApi2.turnRight();
+          break;
+        case CurrentDirection.BACK:
+          controlCarApi2.turnRight();
+          break;
+      }
+      controlCarApi2.currentDirection = CurrentDirection.LEFT;
+      controlCarApi2.moveForward();
+
       setIsActive({...isActive , left: !isActive.left });
       setIsParentActive(true);
     },
 
     'turnALittleLeft': function (){
-      controlCarApi.turnLeftMS();
+      controlCarApi2.turnLeftMS();
       setIsActive({...isActive , topLeft: !isActive.topLeft });
       setIsParentActive(true);
     },
 
     'turnALittleRight': function (){
-      controlCarApi.turnRightMS()
+      controlCarApi2.turnRightMS()
       setIsActive({...isActive , topRight: !isActive.topRight });
       setIsParentActive(true);
     },
 
     'setDefault': function (){
-      controlCarApi.stopMoving();
+      controlCarApi2.stopMoving();
       setIsActive(defaultIsActive);
       setIsParentActive(false);
     },
@@ -93,40 +159,50 @@ const RemoteController = () => {
   }
   const eventLInstance = eventLogic();
 
+
+  // const handleClick = (event:any) => {
   const handleClick = useCallback((event:any) => {
-    switch (event.key){
-      case 'm':
-        eventLInstance.centerLeftMeasure();
-        break;
-      case 't':
-        eventLInstance.centerRightSendMap();
-        break;
-      case 'w':
-      case 'ArrowUp':
-        eventLInstance.goForward();
-        break;
-      case 'd':
-      case 'ArrowRight':
-        eventLInstance.turnRight90deg();
-        break;
-      case 's':
-      case 'ArrowDown':
-        eventLInstance.goBack();
-        break;
-      case 'a':
-      case 'ArrowLeft':
-        eventLInstance.turnLeft90Deg();
-        break;
-      case 'q':
-        eventLInstance.turnALittleLeft();
-        break;
+      switch (event.key){
+        case 'm':
+        case 'M':
+          eventLInstance.centerLeftMeasure();
+          break;
+        case 'f':
+        case 'F':
+          eventLInstance.centerRightStartStopMeasure();
+          break;
+        case 'w':
+        case 'W':
+        case 'ArrowUp':
+          eventLInstance.goForward();
+          break;
+        case 'd':
+        case 'D':
+        case 'ArrowRight':
+          eventLInstance.goRight();
+          break;
+        case 's':
+        case 'S':
+        case 'ArrowDown':
+          eventLInstance.goBack();
+          break;
+        case 'a':
+        case 'A':
+        case 'ArrowLeft':
+          eventLInstance.goLeft();
+          break;
+        case 'q':
+        case 'Q':
+          eventLInstance.turnALittleLeft();
+          break;
 
-      case 'e':
-        eventLInstance.turnALittleRight();
-        break;
-    }
-  },[]);
-
+        case 'e':
+        case 'E':
+          eventLInstance.turnALittleRight();
+          break;
+      }
+  }
+  ,[]);
 
 
 
@@ -139,9 +215,18 @@ const RemoteController = () => {
     };
   }, []);
 
+  useEffect(()=>{
+    setIsMeasurementStarted(controlCarApi2.isMeasurementStarted);
+  },[eventLInstance.centerRightStartStopMeasure]);
 
+  useEffect(()=>{
+    controlCarApi2.mapName = mapName;
+  },[isShowPrompt])
 
   return (
+    <>
+      <div style={{cursor:'pointer'}} onClick={()=>setIsShowPrompt(true)}>Map name: {mapName}</div><br/>
+     <Prompt promptName='Map name' isShow={isShowPrompt}  setIsShow={setIsShowPrompt} setValue={setMapName} />
     <div className={classnames(styles.wrapper, isParentActive && styles.elementActive)}>
       <div className={classnames(styles.circle)}>
         <div className={classnames(styles.cell, styles.centerButtons, styles.centerLeft,
@@ -151,17 +236,25 @@ const RemoteController = () => {
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
-            M
+            <span>M</span>
+            <span>Measure</span>
           </div>
         </div>
         <div className={classnames(styles.cell, styles.centerButtons, styles.centerRight,
           isActive.centerRight && styles.cellIsActive
         )}
-             onMouseDown={eventLInstance.centerRightSendMap}
+             onMouseDown={eventLInstance.centerRightStartStopMeasure}
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
-            T
+            <span>F</span>
+            {
+              isMeasurementStarted ?
+                <span>Finish</span>
+                :
+                <span>Start</span>
+            }
+
           </div>
         </div>
         <div className={classnames(styles.cell, styles.directionButtons, styles.top,
@@ -177,7 +270,7 @@ const RemoteController = () => {
         <div className={classnames(styles.cell, styles.directionButtons, styles.right,
           isActive.right && styles.cellIsActive
         )}
-             onMouseDown={eventLInstance.turnRight90deg}
+             onMouseDown={eventLInstance.goRight}
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
@@ -197,7 +290,7 @@ const RemoteController = () => {
         <div className={classnames(styles.cell, styles.directionButtons, styles.left,
           isActive.left && styles.cellIsActive
         )}
-             onMouseDown={eventLInstance.turnLeft90Deg}
+             onMouseDown={eventLInstance.goLeft}
              onMouseUp={eventLInstance.setDefault}
         >
           <div className={classnames(styles.innerCell)}>
@@ -205,7 +298,6 @@ const RemoteController = () => {
           </div>
         </div>
 
-        {/*modify us */}
         <div className={classnames(styles.cell, styles.directionButtons, styles.topLeft,
           isActive.topLeft && styles.cellIsActive
         )}
@@ -228,15 +320,9 @@ const RemoteController = () => {
           </div>
         </div>
 
-        {/*end*/}
-
-
-
-
-
       </div>
-
     </div>
+    </>
   );
 };
 

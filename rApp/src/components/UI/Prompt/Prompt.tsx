@@ -22,18 +22,17 @@ interface PromptProps{
 // {mapName}
 
 
-const Prompt = ({promptName,isShow,setIsShow,setValue,fetchCallBack}:PromptProps) => {
+const Prompt = ({promptName,isShow,setIsShow,setValue}:PromptProps) => {
 
   const [inputValue,setInputValue] = useState('');
 
   const handleClose =() =>{
-    setInputValue('');
+    // setInputValue('');
     setIsShow(false);
   }
 
-  const handleSave = async() =>{
+  const handleSave = () =>{
     setValue(inputValue);
-    await fetchCallBack();
     handleClose();
   }
 

@@ -2,28 +2,40 @@
 import mqtt from "precompiled-mqtt";
 import {Command} from "./CommandEnums";
 import {TopicEnums} from "./TopicEnums";
-import {CoordsDistanceObject} from "../types/types";
+import {CoordsDistanceObject, IMapDataPostWithName, IMapDataPostWithoutName} from "../types/types";
 import {SensorValue} from "./SensorsValuesEnums";
 import {controlCarPath} from "../data/paths";
 import {CurrentDirection} from "./CurrentDirectionEnums";
+import {DataBaseApi} from "./DataBaseApi";
 
 export class ControlCarApi2 {
+
+  private dataBaseApi: DataBaseApi;
 
   private static instance: ControlCarApi2;
   private readonly client: any;
 
   public points = [];
-  currentDirection = CurrentDirection.FORWARD;
-  public width: number = 100;
-  public height: number = 100;
+  private reqDataWithoutName: IMapDataPostWithoutName | null = null;
 
-  private coordinatesArray: CoordsDistanceObject[] = [];
+  public currentDirection:CurrentDirection = CurrentDirection.FORWARD;
+  public isMeasurementStarted = false;
+  public readyToBeSent = false;
 
-  doneObject : any;
+  public mapName: string|null = null;
+  private width: number = 0;
+  private height: number = 0;
+  private robotLong: number = 25;
+
+  // private coordinatesArray: CoordsDistanceObject[] = [];
+
+  // doneObject : any;
 
   private constructor() {
 
     this.client = mqtt.connect(controlCarPath);
+    this.dataBaseApi = new DataBaseApi();
+
   }
 
   public static getInstance(): ControlCarApi2 {
@@ -34,7 +46,7 @@ export class ControlCarApi2 {
     return ControlCarApi2.instance;
   }
 
-   measureCoordinates() {
+   measure() {
     const topics = [ TopicEnums.RobotTopic, TopicEnums.UsSensorTopic, TopicEnums.DhtSensor, TopicEnums.TiltSensor, TopicEnums.PhotoResistor ];
     for(let i=1; i<topics.length; i++)
       this.client.subscribe(topics[i] + "/out");
@@ -75,13 +87,75 @@ export class ControlCarApi2 {
     });
   }
 
+  async saveMeasureResult(){
+    let reqDataWithName: IMapDataPostWithName;
+    if(this.reqDataWithoutName){
+      if(this.mapName){
+        reqDataWithName = {
+          ...this.reqDataWithoutName,
+          name: this.mapName
+        }
+        try {
+          const result = await this.dataBaseApi.createNewMap(reqDataWithName);
+          console.log(result)
+        }
+        catch (e){
+          alert(e);
+        }
+      }
+      }
+
+    else{
+      // alert('problems with db api')
+      console.log('reqDataWithoutName is empty')
+    }
+
+  }
+
+  async startStopMeasurementHandler(){
+    if(!this.isMeasurementStarted){
+      this.isMeasurementStarted = true;
+
+      this.client.subscribe(TopicEnums.UsSensorTopic + "/out");
+      this.sendCommand(TopicEnums.RobotTopic, Command.GET_COORDINATES);
+
+      let distances = {};
+      let msgCount = 0;
+
+      this.client.on("message", (topic: any, payload: { toString: () => any; }) => {
+        const msg = payload.toString();
+        msgCount++;
+        const valObj = this.sensorStrToObj(msg);
+        distances = Object.assign(distances, valObj);
+
+        if(msgCount === 3){
+          this.client.unsubscribe(TopicEnums.UsSensorTopic + "/out");
+          // @ts-ignore
+          this.width = parseInt(distances["DISTANCE_LEFT"]) + parseInt(distances["DISTANCE_RIGHT"]);
+          // @ts-ignore
+          this.height = parseInt(distances["DISTANCE_FRONT"]) + this.robotLong ;
+        }
+      });
+
+      this.currentDirection = CurrentDirection.FORWARD;
+    } else {
+
+      await this.saveMeasureResult();
+
+      this.isMeasurementStarted = false;
+
+      console.log(this.points);
+      console.log(this.width,this.height);
+
+      this.points = [];
+      this.mapName = null;
+      this.reqDataWithoutName = null;
+    }
+  }
 
 
   moveForward() {
     this.sendCommand(TopicEnums.RobotTopic, Command.MOVE_FORWARD);
-  }
-  moveBack() {
-    this.sendCommand(TopicEnums.RobotTopic, Command.MOVE_BACK);
   }
 
   turnLeft() {
