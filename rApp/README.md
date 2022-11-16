@@ -19,7 +19,7 @@ npm install husky
 npm run start
 ```
 
-## Packaging for Production
+## Packaging for production
 
 ```bash
 npm run package
